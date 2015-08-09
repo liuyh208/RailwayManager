@@ -1,0 +1,108 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>计量仪器台账登录</title>
+
+    <link href="~/Content/style1.css" rel="stylesheet" />
+
+    <script src="~/Content/easyUI/jquery.min.js"></script>
+    <script src="~/Content/easyUI/jquery.easyui.min.js" type="text/javascript"></script>
+    <script src="~/Content/easyUI/locale/easyui-lang-zh_CN.js"></script>
+
+    <script src="~/Content/html5shiv.3.7.min.js"></script>
+    <script src="~/Content/jquery.json-2.4.min.js"></script>
+    <link href="~/Content/easyUI/themes/icon.css" rel="stylesheet" />
+    <link href="~/Content/easyUI/themes/bootstrap/easyui.css" rel="stylesheet" />
+
+    <link href="~/Content/Style.css" rel="stylesheet" />
+    <script src="~/Content/main.js" type="text/javascript"></script>
+    
+
+    <script type="text/javascript">
+        function login() {
+            
+            var userName = $('#UserName').val();
+            var passWord = $('#password').val();
+             
+            if (userName == "") {
+                $.messager.alert('提示', '请输入账号', 'warning');
+                $('#UserName').focus();
+            } else if (passWord == "") {
+                $.messager.alert('提示', '请输入密码', 'warning');
+                $('#password').focus();
+            } else {
+                var userData = { UserName: userName, Password: passWord };
+                postData('api/auth', userData, function (data, textStatus) {
+                    window.location = '/Home/Index';
+                }, function (data, textStatus, errorThrown) {
+                    $.messager.alert('提示', '登录失败，账号或密码有误！', 'warning');
+                });
+            }
+        }
+        function closeWin() {
+            window.close();
+        }
+        function keyupPro() {
+            if (event.keyCode == 13)
+                login();
+        }
+        
+    </script>
+</head>
+<body>
+    <div id="bh-wzm-login-all">
+        <div class="bh-wzm-center">
+            <a href="#">
+                <img src="../img/logo.gif" width="200" />
+            </a>
+            <p class="bh-wzm-huanying">
+                欢迎使用计量仪器管理系统
+            </p>
+            <div class="bh-wzm-table">
+                <table width="230" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td style="color: #48596d" width="60" align="right">
+                            用户：
+                        </td>
+                        <td colspan="2" width="120">
+                            <input type="text" class="bh-wzm-yonhu" id="UserName" onkeyup="keyupPro()" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="color: #48596d" width="60" align="right">
+                            密码：
+                        </td>
+                        <td colspan="2">
+                            <input type="password" class="bh-wzm-yonhu" id="password" onkeyup="keyupPro()" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            &nbsp;
+                        </td>
+                        <td>
+                            <input type="submit" value="登录" class="bh-wzm-dlu" id="Button1" onclick="login()" />
+                        </td>
+                        <td>
+                            <input type="submit" value="重置" class="bh-wzm-dlu" onclick="closeWin()" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            &nbsp;
+                        </td>
+                        <!-- <td colspan="2"><input name="" type="radio" value="" />记住密码？</td>-->
+                    </tr>
+                </table>
+            </div>
+            <p class="bh-wzm-copyright">
+                版权所有：北京高铁工务段 2014
+            </p>
+        </div>
+    </div>
+</body>
+</html>

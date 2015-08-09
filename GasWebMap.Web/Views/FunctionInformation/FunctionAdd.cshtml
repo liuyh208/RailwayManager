@@ -1,0 +1,104 @@
+﻿@{
+    Layout = null;
+}
+
+<style>
+    .tableForm th {
+        text-align: right;
+        width: 100px;
+    }
+
+    .tableForm tr { height: 30px; }
+</style>
+<script type="text/javascript">
+
+
+    $(function() {
+        var formParam = {
+            url: 'api/auth',
+            success: function(result) {
+                var r = $.parseJSON(result);
+                if (r.success) {
+                    $.messager.show({
+                        title: '提示',
+                        msg: "OK"
+                    });
+                    $('#AddFunctionDialog').dialog('close');
+                } else {
+                    $.messager.show({
+                        title: '提示',
+                        msg: r.msg
+                    });
+                }
+            }
+        };
+
+        $('#AddFunctionForm').form(formParam);
+
+        $('#AddFunctionDialog').show().dialog({
+            modal: true,
+            title: '添加功能',
+            width: 300,
+            height: 250,
+            closable: true,
+            buttons: [
+                {
+                    text: '确定',
+                    handler: function() {
+                        addFunction();
+                    }
+                }, {
+                    text: '取消',
+                    handler: function() {
+                        $('#AddFunctionDialog').dialog('close');
+                    }
+                }
+            ]
+        });
+    });
+
+    function addFunction() {
+        var node = $('#groupTree').tree('getSelected');
+        var groupID = node.id;
+        $.post('/api/function',
+            {
+                Text: $('#NameID').val(),
+                Url: $('#UrlID').val(),
+                GroupID: groupID,
+            },
+            function(data, textStatus) {
+                $('#functionDataGrid').datagrid('appendRow', data);
+                $('#AddFunctionDialog').dialog('close');
+            }, "json");
+    }
+
+</script>
+
+<div id="AddFunctionDialog" align="center">
+    <table>
+        <tr>
+            <td>
+                <form method="post" action="api/auth" id="AddFunctionForm">
+                    <table class="tableForm">
+                        <tr>
+                            <td style="text-align: right" width="100">
+                                功能名称:
+                            </td>
+                            <td style="text-align: left" width="200">
+                                <input name="FunctionName" id="NameID" class="easyui-validatebox" data-options="required:true" style="width: 150px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right" width="100">
+                                功能路径:
+                            </td>
+                            <td style="text-align: left" width="200">
+                                <input name="Url" id="UrlID" class="easyui-validatebox" data-options="required:true" style="width: 150px;" />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>

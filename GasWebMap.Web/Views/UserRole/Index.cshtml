@@ -1,0 +1,260 @@
+﻿@{
+    Layout = null;
+}
+@*权限管理界面*@
+<script type="text/javascript">
+    $(function () {
+        $('#roleTree').tree({
+            method: 'GET',
+            url: '../api/roletree?f=json',
+            onClick: function (node) {
+                //alert(node.id + "," + node.text);'api/menutree/' + node.id
+
+                getData('../api/menutree/' + node.id, null, function (data, textStatus) {
+                    $("#Functiontree").tree('loadData', data);
+                }, function () { })
+            }
+        });
+        //$("#Functiontree").tree({
+        //    method: 'GET',
+        //    cache: false,
+        //    url: 'api/menutree?f=json'
+
+        //});
+        getData('api/menutree?f=json', null, function (data, textStatus) {
+            $("#Functiontree").tree('loadData', data);
+        }, function () { })
+
+    });
+
+    //修改角色
+    function Update() {
+        var node = $('#roleTree').tree('getSelected');
+        if (node == null) {
+            parent.$.messager.alert('提示', '请选择要编辑的角色！', 'warning');
+            return false;
+        } else {
+            $("#RoleID").val(node.text);
+            $('#AddRoleDialog').show().dialog({
+                modal: true,
+                title: '修改角色',
+                width: 250,
+                height: 150,
+                closable: true,
+                buttons: [
+                    {
+                        text: '确定',
+                        handler: function () {
+                            var name = $("#RoleID").val();
+                            if (name == null || $.trim(name) == "") {
+                                parent.$.messager.alert('提示', '请输入角色名称！', 'warning');
+                                return false;
+                            } else {
+                                parent.$.messager.confirm('询问', '您是否要修改角色' + node.text + '？', function (b) {
+                                    //$.ajax({
+                                    //    type: "PUT",
+                                    //    url: "/api/role",
+                                    //    data: { ID: node.id, Name: name, PIndex: '12' },
+                                    //    success: function (data, textStatus) {
+                                    //        if (textStatus == "success") {
+                                    //            parent.$.messager.alert('提示', '修改成功！', 'warning');
+                                    //            node.text = name;
+                                    //            $('#roleTree').tree('update', node);
+                                    //        }
+                                    //    },
+                                    //    error: function (data, textStatus, errorThrown) {
+                                    //        parent.$.messager.alert('提示', '修改失败，错误信息：' + errorThrown, 'warning');
+                                    //    }
+                                    //});
+                                    if (b) {
+                                        putData("/api/role", { ID: node.id, Name: name, PIndex: '0' }, function (data, textStatus) {
+                                            if (textStatus == "success") {
+                                                parent.$.messager.alert('提示', '修改成功！', 'warning');
+                                                node.text = name;
+                                                $('#roleTree').tree('update', node);
+                                            }
+                                        }, function (data, textStatus, errorThrown) {
+                                            parent.$.messager.alert('提示', '修改失败，错误信息：' + errorThrown, 'warning');
+                                        })
+
+                                        $('#AddRoleDialog').dialog('close');
+                                    }
+                                });
+                            }
+                        }
+                    }, {
+                        text: '取消',
+                        handler: function () {
+                            $('#AddRoleDialog').dialog('close');
+                        }
+                    }
+                ]
+            });
+        }
+
+    }
+
+    //删除角色
+    function Remove() {
+        var node = $('#roleTree').tree('getSelected');
+        if (node == null) {
+            parent.$.messager.alert('提示', '请选择要删除的角色！', 'warning');
+            return false;
+        } else {
+            parent.$.messager.confirm('询问', '您是否要删除角色' + node.text + '？', function (b) {
+                //$.ajax({
+                //    type: "DELETE",
+                //    url: "/api/role/" + node.id.toString(),
+                //    success: function (data, textStatus) {
+                //        if (textStatus == "success") {
+                //            parent.$.messager.alert('提示', '删除成功！', 'warning');
+                //            $('#roleTree').tree('remove', node.target);
+                //        }
+                //    },
+                //    error: function (data, textStatus, errorThrown) {
+                //        parent.$.messager.alert('提示', '删除失败，错误信息：' + errorThrown, 'warning');
+                //    }
+                //});
+                if (b) {
+                    deleteData("/api/role/" + node.id.toString(), null, function (data, textStatus) {
+                        if (textStatus == "success") {
+                            parent.$.messager.alert('提示', '删除成功！', 'warning');
+                            $('#roleTree').tree('remove', node.target);
+                        }
+                    }, function (data, textStatus, errorThrown) {
+                        parent.$.messager.alert('提示', '删除失败，错误信息：' + errorThrown, 'warning');
+                    })
+                }
+            });
+        }
+    };
+
+    //授权方法
+    function grantFun() {
+        var roleNode = $('#roleTree').tree('getSelected');
+        var menuNode = $('#Functiontree').tree('getChecked');
+        if (roleNode == null) {
+            parent.$.messager.alert('提示', '请选择要编辑的角色！', 'warning');
+            return false;
+        } else {
+            var menuIds = new Array();
+            for (var i = 0; i < menuNode.length; i++) {
+                menuIds.push(menuNode[i].id);
+            }
+            var sdata = { RoleID: roleNode.id, FunctionIDs: menuIds };
+            var jsondata = $.toJSON(sdata);
+
+            //$.ajax({
+            //    type: 'POST',
+            //    url: "/api/rolefuntion?f=json",
+            //    dataType: "json",
+            //    contentType: 'application/json',
+            //    data: jsondata,
+            //    success: function (data, textStatus) {
+            //        parent.$.messager.alert('提示', '授权成功', 'warning');
+            //    },
+            //    error: function (data, textStatus, errorThrown) {
+
+            //        parent.$.messager.alert('提示', '授权失败，错误信息：' + errorThrown, 'warning');
+            //    }
+            //});
+            postData("/api/rolefuntion?f=json", sdata, function (data, textStatus) {
+                parent.$.messager.alert('提示', '授权成功', 'warning');
+            }, function (data, textStatus, errorThrown) {
+                parent.$.messager.alert('提示', '授权失败，错误信息：' + errorThrown, 'warning');
+            });
+        }
+    }
+    //打开添加窗口
+    function showAddDialog() {
+        $("#RoleID").val("");
+        $('#AddRoleDialog').show().dialog({
+            modal: true,
+            title: '添加角色',
+            width: 250,
+            height: 150,
+            closable: true,
+            buttons: [
+                {
+                    text: '确定',
+                    handler: function () {
+                        AddRole();
+                    }
+                }, {
+                    text: '取消',
+                    handler: function () {
+                        $('#AddRoleDialog').dialog('close');
+                    }
+                }
+            ]
+        });
+    }
+
+    //添加角色
+    function AddRole() {
+        var node = $('#roleTree').tree('getSelected');
+        var name = $("#RoleID").val();
+        if (name == null || $.trim(name) == "") {
+            parent.$.messager.alert('提示', '请输入角色名称！', 'warning');
+            document.getElementById("RoleID").focus();
+            return false;
+        } else {
+            $.post('/api/role', { Name: name }, function (data, textStatus) {
+                if (textStatus == "success") {
+                    parent.$.messager.alert('提示', '添加成功！', 'warning');
+                    $('#roleTree').tree({
+                        method: 'GET',
+                        url: 'api/roletree?f=json'
+                    });
+                } else {
+                }
+                $('#AddRoleDialog').dialog('close');
+            }, "json");
+        }
+
+    }
+</script>
+
+<div class="easyui-layout" data-options="fit:true,border:false">
+    <div data-options="region:'west',split:true" title="角色" style="width: 200px;">
+        <div style="padding-top: 1px; padding-bottom: 1px;padding-right:1px; border-bottom: 1px solid #ddd; background-color: rgb(245, 245, 245);">
+            <div id="toolbar3" style="text-align: right">
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-add" plain="true" onclick=" showAddDialog(); ">添加</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-edit" plain="true" onclick=" Update(); ">修改</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-remove" plain="true" onclick=" Remove(); ">删除</a>
+            </div>
+        </div>
+        @*角色树位置*@
+        <ul id="roleTree" class="easyui-tree"></ul>
+    </div>
+
+    <div data-options="region:'center',title:'功能权限'">
+        <div style="padding-top: 1px; padding-bottom: 1px; padding-right: 1px; border-bottom: 1px solid #ddd; background-color: rgb(245, 245, 245); ">
+            <div id="toolbar4" style="text-align: right">
+                <a onclick=" grantFun(); " href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-ok'">授权</a>
+            </div>
+        </div>
+        <ul id="Functiontree" class="easyui-tree" data-options="animate:true,checkbox:true"></ul>
+    </div>
+</div>
+
+<div id="AddRoleDialog" align="center">
+    <table>
+        <tr>
+            <td>
+                <form method="post" action="api/auth" id="AddRoleForm">
+                    <table class="tableForm">
+                        <tr>
+                            <td style="text-align: center">
+                                角色名称:
+                            </td>
+                            <td>
+                                <input name="RoleName" id="RoleID" class="easyui-validatebox" style="width: 150px;" />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>

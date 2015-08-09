@@ -1,0 +1,81 @@
+.window {
+    border-style: solid;
+    border-width: 1px;
+    overflow: hidden;
+    padding: 5px;
+}
+
+.window .window-header {
+    background: transparent;
+    padding: 0px 0px 6px 0px;
+}
+
+.window .window-body {
+    border-style: solid;
+    border-top-width: 0px;
+    border-width: 1px;
+}
+
+.window .window-body-noheader { border-top-width: 1px; }
+
+.window .window-header .panel-icon,
+.window .window-header .panel-tool {
+    margin-top: -11px;
+    top: 50%;
+}
+
+.window .window-header .panel-icon { left: 1px; }
+
+.window .window-header .panel-tool { right: 1px; }
+
+.window .window-header .panel-with-icon { padding-left: 18px; }
+
+.window-proxy {
+    overflow: hidden;
+    position: absolute;
+}
+
+.window-proxy-mask {
+    filter: alpha(opacity=5);
+    opacity: 0.05;
+    position: absolute;
+}
+
+.window-mask {
+    filter: alpha(opacity=40);
+    font-size: 1px;
+    height: 100%;
+    left: 0;
+    opacity: 0.40;
+    overflow: hidden;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    *zoom: 1;
+}
+
+.window,
+.window-shadow {
+    -moz-border-radius: 0px 0px 0px 0px;
+    -webkit-border-radius: 0px 0px 0px 0px;
+    border-radius: 0px 0px 0px 0px;
+    position: absolute;
+}
+
+.window-shadow {
+    -moz-box-shadow: 2px 2px 3px #ededed;
+    -webkit-box-shadow: 2px 2px 3px #ededed;
+    background: #eee;
+    box-shadow: 2px 2px 3px #ededed;
+    filter: progid:DXImageTransform.Microsoft.Blur(pixelRadius=2, MakeShadow=false, ShadowOpacity=0.2);
+}
+
+.window,
+.window .window-body { border-color: #ddd; }
+
+.window { background-color: #ffffff; }
+
+.window-proxy { border: 1px dashed #ddd; }
+
+.window-proxy-mask,
+.window-mask { background: #eee; }

@@ -1,0 +1,109 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1、Presentation", "1、Presentation", "{0FD03535-E76D-4715-BBDF-0BA541FDB725}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "2、Service", "2、Service", "{10F5B49B-C510-4AFC-AD3F-6C0207DF7763}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3、Domain", "3、Domain", "{77930194-1F4D-4598-BA47-54E44FF7B560}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "4、Infrastructure", "4、Infrastructure", "{10EA1413-F786-4FF2-B2CF-B1472086C224}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GasWebMap.Services", "GasWebMap.Services\GasWebMap.Services.csproj", "{DB36E0AA-AE09-4E7D-96F4-A94F8BC86B67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GasWebMap.Common", "GasWebMap.Common\GasWebMap.Common.csproj", "{243DC105-4423-4A71-B0F8-B28DF9231A7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GasWebMap.Core", "GasWebMap.Core\GasWebMap.Core.csproj", "{D2F9BC6D-E057-402E-8D06-F5DF4F01D726}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "9、Lib", "9、Lib", "{C6816DB5-EAC5-40A3-9C97-3751D2D33BD6}"
+	ProjectSection(SolutionItems) = preProject
+		Lib\Autofac.dll = Lib\Autofac.dll
+		Lib\Autofac.Integration.Mef.dll = Lib\Autofac.Integration.Mef.dll
+		Lib\AutoMapper.dll = Lib\AutoMapper.dll
+		Lib\AutoMapper.Net4.dll = Lib\AutoMapper.Net4.dll
+		Lib\log4net.dll = Lib\log4net.dll
+		Lib\ServiceStack.Common.dll = Lib\ServiceStack.Common.dll
+		Lib\ServiceStack.dll = Lib\ServiceStack.dll
+		Lib\ServiceStack.Interfaces.dll = Lib\ServiceStack.Interfaces.dll
+		Lib\ServiceStack.OrmLite.dll = Lib\ServiceStack.OrmLite.dll
+		Lib\ServiceStack.OrmLite.Oracle.dll = Lib\ServiceStack.OrmLite.Oracle.dll
+		Lib\ServiceStack.ServiceInterface.dll = Lib\ServiceStack.ServiceInterface.dll
+		Lib\ServiceStack.Text.dll = Lib\ServiceStack.Text.dll
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GasWebMap.Domain", "GasWebMap.Domains\GasWebMap.Domain.csproj", "{E4E186B0-F0D6-4D5E-802E-882A1D3F25EE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5、Modules", "5、Modules", "{D0B29AC8-A256-4779-8E46-DBCA8F1FA108}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6、Doc", "6、Doc", "{D3205EB7-8050-4CED-B057-3BC647EF5CE2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GasWebMap.Repository.Oracle", "GasWebMap.Repository.OrmLite\GasWebMap.Repository.Oracle.csproj", "{F2C57186-12DD-4AA5-AD8A-3ECBFA2BC371}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GasWebMap.Web", "GasWebMap.Web\GasWebMap.Web.csproj", "{E7599EE2-9F11-41B5-9A88-A7F2D143DCFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OMap.Data.MySql", "CrhTaskInfo.Data.MySql\OMap.Data.MySql.csproj", "{FCEED7B9-561F-43BA-9A4E-CDDC03CEABE6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		SqlCE|Any CPU = SqlCE|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DB36E0AA-AE09-4E7D-96F4-A94F8BC86B67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB36E0AA-AE09-4E7D-96F4-A94F8BC86B67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB36E0AA-AE09-4E7D-96F4-A94F8BC86B67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB36E0AA-AE09-4E7D-96F4-A94F8BC86B67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB36E0AA-AE09-4E7D-96F4-A94F8BC86B67}.SqlCE|Any CPU.ActiveCfg = Release|Any CPU
+		{DB36E0AA-AE09-4E7D-96F4-A94F8BC86B67}.SqlCE|Any CPU.Build.0 = Release|Any CPU
+		{243DC105-4423-4A71-B0F8-B28DF9231A7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{243DC105-4423-4A71-B0F8-B28DF9231A7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{243DC105-4423-4A71-B0F8-B28DF9231A7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{243DC105-4423-4A71-B0F8-B28DF9231A7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{243DC105-4423-4A71-B0F8-B28DF9231A7B}.SqlCE|Any CPU.ActiveCfg = Release|Any CPU
+		{243DC105-4423-4A71-B0F8-B28DF9231A7B}.SqlCE|Any CPU.Build.0 = Release|Any CPU
+		{D2F9BC6D-E057-402E-8D06-F5DF4F01D726}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2F9BC6D-E057-402E-8D06-F5DF4F01D726}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2F9BC6D-E057-402E-8D06-F5DF4F01D726}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2F9BC6D-E057-402E-8D06-F5DF4F01D726}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2F9BC6D-E057-402E-8D06-F5DF4F01D726}.SqlCE|Any CPU.ActiveCfg = Release|Any CPU
+		{D2F9BC6D-E057-402E-8D06-F5DF4F01D726}.SqlCE|Any CPU.Build.0 = Release|Any CPU
+		{E4E186B0-F0D6-4D5E-802E-882A1D3F25EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4E186B0-F0D6-4D5E-802E-882A1D3F25EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4E186B0-F0D6-4D5E-802E-882A1D3F25EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4E186B0-F0D6-4D5E-802E-882A1D3F25EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4E186B0-F0D6-4D5E-802E-882A1D3F25EE}.SqlCE|Any CPU.ActiveCfg = Release|Any CPU
+		{E4E186B0-F0D6-4D5E-802E-882A1D3F25EE}.SqlCE|Any CPU.Build.0 = Release|Any CPU
+		{F2C57186-12DD-4AA5-AD8A-3ECBFA2BC371}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2C57186-12DD-4AA5-AD8A-3ECBFA2BC371}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2C57186-12DD-4AA5-AD8A-3ECBFA2BC371}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2C57186-12DD-4AA5-AD8A-3ECBFA2BC371}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2C57186-12DD-4AA5-AD8A-3ECBFA2BC371}.SqlCE|Any CPU.ActiveCfg = Release|Any CPU
+		{E7599EE2-9F11-41B5-9A88-A7F2D143DCFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E7599EE2-9F11-41B5-9A88-A7F2D143DCFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E7599EE2-9F11-41B5-9A88-A7F2D143DCFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E7599EE2-9F11-41B5-9A88-A7F2D143DCFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E7599EE2-9F11-41B5-9A88-A7F2D143DCFD}.SqlCE|Any CPU.ActiveCfg = Release|Any CPU
+		{E7599EE2-9F11-41B5-9A88-A7F2D143DCFD}.SqlCE|Any CPU.Build.0 = Release|Any CPU
+		{FCEED7B9-561F-43BA-9A4E-CDDC03CEABE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCEED7B9-561F-43BA-9A4E-CDDC03CEABE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCEED7B9-561F-43BA-9A4E-CDDC03CEABE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCEED7B9-561F-43BA-9A4E-CDDC03CEABE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCEED7B9-561F-43BA-9A4E-CDDC03CEABE6}.SqlCE|Any CPU.ActiveCfg = SqlCE|Any CPU
+		{FCEED7B9-561F-43BA-9A4E-CDDC03CEABE6}.SqlCE|Any CPU.Build.0 = SqlCE|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E7599EE2-9F11-41B5-9A88-A7F2D143DCFD} = {0FD03535-E76D-4715-BBDF-0BA541FDB725}
+		{DB36E0AA-AE09-4E7D-96F4-A94F8BC86B67} = {10F5B49B-C510-4AFC-AD3F-6C0207DF7763}
+		{E4E186B0-F0D6-4D5E-802E-882A1D3F25EE} = {77930194-1F4D-4598-BA47-54E44FF7B560}
+		{243DC105-4423-4A71-B0F8-B28DF9231A7B} = {77930194-1F4D-4598-BA47-54E44FF7B560}
+		{D2F9BC6D-E057-402E-8D06-F5DF4F01D726} = {10EA1413-F786-4FF2-B2CF-B1472086C224}
+		{F2C57186-12DD-4AA5-AD8A-3ECBFA2BC371} = {D0B29AC8-A256-4779-8E46-DBCA8F1FA108}
+		{FCEED7B9-561F-43BA-9A4E-CDDC03CEABE6} = {D0B29AC8-A256-4779-8E46-DBCA8F1FA108}
+	EndGlobalSection
+EndGlobal

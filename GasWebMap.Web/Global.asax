@@ -1,0 +1,1 @@
+﻿<%@ Application Codebehind="Global.asax.cs" Inherits="GasWebMap.Web.MvcApplication" Language="C#" %>

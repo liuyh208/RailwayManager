@@ -1,0 +1,113 @@
+﻿@{
+    Layout = null;
+}
+
+<style>
+    .tableForm th {
+        text-align: right;
+        width: 100px;
+    }
+
+    .tableForm tr { height: 30px; }
+</style>
+<script type="text/javascript">
+
+
+    $(function() {
+        var formParam = {
+            url: 'api/auth',
+            success: function(result) {
+                var r = $.parseJSON(result);
+                if (r.success) {
+                    $.messager.show({
+                        title: '提示',
+                        msg: "OK"
+                    });
+                    $('#UpdateGroupDialog').dialog('close');
+                } else {
+                    $.messager.show({
+                        title: '提示',
+                        msg: r.msg
+                    });
+                }
+            }
+        };
+
+        $('#UpdateGroupForm').form(formParam);
+
+        var node = $('#groupTree').tree('getSelected');
+        if (node == null) {
+            parent.$.messager.alert('提示', '请选择要修改的分组！', 'warning');
+            return false;
+        } else {
+            $('#UpdateGroupDialog').show().dialog({
+                modal: true,
+                title: '修改分组',
+                width: 250,
+                height: 150,
+                closable: true,
+                buttons: [
+                    {
+                        text: '确定',
+                        handler: function() {
+                            UpdateGroup();
+                        }
+                    }, {
+                        text: '取消',
+                        handler: function() {
+                            $('#UpdateGroupDialog').dialog('close');
+                        }
+                    }
+                ]
+            });
+        }
+    });
+
+    function UpdateGroup() {
+        var node = $('#groupTree').tree('getSelected');
+        var name = document.getElementById("GroupID").value;
+        if (name == null || $.trim(name) == "") {
+            parent.$.messager.alert('提示', '请输入分组名称！', 'warning');
+            return false;
+        } else {
+            if (node) {
+                var id = node.id;
+                $.ajax({
+                    type: "put",
+                    url: "/api/group",
+                    data: { ID: id, Text: name },
+                    success: function(data, textStatus) {
+                        parent.$.messager.alert('提示', '修改成功！', 'warning');
+                    },
+                    error: function(data, status, e) {
+                        parent.$.messager.alert('提示', '修改失败，错误信息:' + e, 'warning');
+                    }
+                });
+                node.text = '<span>' + name + '<\/span>';
+                $('#groupTree').tree('update', node);
+                $('#UpdateGroupDialog').dialog('close');
+            }
+        }
+    }
+</script>
+
+<div id="UpdateGroupDialog" align="center">
+    <table>
+        <tr>
+            <td>
+                <form method="post" action="api/auth" id="UpdateGroupForm">
+                    <table class="tableForm">
+                        <tr>
+                            <td style="text-align: center">
+                                分组名称:
+                            </td>
+                            <td>
+                                <input name="GroupName" id="GroupID" class="easyui-validatebox" data-options="required:true" style="width: 150px;" />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>

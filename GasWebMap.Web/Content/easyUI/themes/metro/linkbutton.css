@@ -1,0 +1,162 @@
+a.l-btn {
+    background-position: right 0;
+    cursor: pointer;
+    display: inline-block;
+    height: 24px;
+    outline: none;
+    padding-right: 18px;
+    text-decoration: none;
+    zoom: 1;
+}
+
+a.l-btn-plain {
+    border: 0;
+    padding: 1px 6px 1px 1px;
+}
+
+a.l-btn-disabled {
+    color: #ccc;
+    cursor: default;
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+}
+
+a.l-btn span.l-btn-left {
+    background-position: 0 -48px;
+    display: inline-block;
+    height: 24px;
+    line-height: 24px;
+    padding: 0 0 0 18px;
+}
+
+a.l-btn-plain span.l-btn-left { padding-left: 5px; }
+
+a.l-btn span span.l-btn-text {
+    display: inline-block;
+    font-size: 12px;
+    height: 16px;
+    line-height: 16px;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    top: 4px;
+    vertical-align: top;
+    width: auto;
+}
+
+a.l-btn span span.l-btn-icon-left {
+    background-position: left center;
+    padding: 0 0 0 20px;
+}
+
+a.l-btn span span.l-btn-icon-right {
+    background-position: right center;
+    padding: 0 20px 0 0;
+}
+
+a.l-btn span span span.l-btn-empty {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    width: 16px;
+}
+
+a:hover.l-btn {
+    background-position: right -24px;
+    outline: none;
+    text-decoration: none;
+}
+
+a:hover.l-btn span.l-btn-left { background-position: 0 bottom; }
+
+a:hover.l-btn-plain { padding: 0 5px 0 0; }
+
+a:hover.l-btn-disabled { background-position: right 0; }
+
+a:hover.l-btn-disabled span.l-btn-left { background-position: 0 -48px; }
+
+a.l-btn .l-btn-focus { outline: #0000FF dotted thin; }
+
+a.l-btn {
+    -moz-border-radius: 0px 0px 0px 0px;
+    -webkit-border-radius: 0px 0px 0px 0px;
+    background: #ffffff;
+    background: -webkit-linear-gradient(top, #ffffff 0, #ffffff 100%);
+    background: -moz-linear-gradient(top, #ffffff 0, #ffffff 100%);
+    background: -o-linear-gradient(top, #ffffff 0, #ffffff 100%);
+    background: linear-gradient(to bottom, #ffffff 0, #ffffff 100%);
+    background-image: url('images/linkbutton_bg.png');
+    background-repeat: no-repeat;
+    background-repeat: repeat-x;
+    background-repeat: repeat-x;
+    border: 1px solid #dddddd;
+    border-radius: 0px 0px 0px 0px;
+    color: #777;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#ffffff, GradientType=0);
+}
+
+a.l-btn span.l-btn-left {
+    background-image: url('images/linkbutton_bg.png');
+    background-image: none;
+    background-repeat: no-repeat;
+}
+
+a:hover.l-btn {
+    background: #E6E6E6;
+    border: 1px solid #ddd;
+    color: #444;
+    filter: none;
+}
+
+a.l-btn-plain,
+a.l-btn-plain span.l-btn-left {
+    background: transparent;
+    border: 0;
+    filter: none;
+}
+
+a:hover.l-btn-plain {
+    -moz-border-radius: 0px 0px 0px 0px;
+    -webkit-border-radius: 0px 0px 0px 0px;
+    background: #E6E6E6;
+    border: 1px solid #ddd;
+    border-radius: 0px 0px 0px 0px;
+    color: #444;
+}
+
+a.l-btn-disabled,
+a:hover.l-btn-disabled {
+    background: #ffffff;
+    background: -webkit-linear-gradient(top, #ffffff 0, #ffffff 100%);
+    background: -moz-linear-gradient(top, #ffffff 0, #ffffff 100%);
+    background: -o-linear-gradient(top, #ffffff 0, #ffffff 100%);
+    background: linear-gradient(to bottom, #ffffff 0, #ffffff 100%);
+    background-repeat: repeat-x;
+    color: #777;
+    color: #777;
+    filter: alpha(opacity=50);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#ffffff, GradientType=0);
+    filter: alpha(opacity=50) progid:DXImageTransform.Microsoft.gradient(startColorstr=#ffffff, endColorstr=#ffffff, GradientType=0);
+}
+
+a.l-btn-plain-disabled,
+a:hover.l-btn-plain-disabled {
+    background: transparent;
+    filter: alpha(opacity=50);
+}
+
+a.l-btn-selected,
+a:hover.l-btn-selected {
+    background: #ddd;
+    background-position: right -24px;
+    filter: none;
+}
+
+a.l-btn-selected span.l-btn-left,
+a:hover.l-btn-selected span.l-btn-left {
+    background-image: none;
+    background-position: 0 bottom;
+}
+
+a.l-btn-plain-selected,
+a:hover.l-btn-plain-selected { background: #ddd; }

@@ -1,0 +1,24 @@
+﻿@charset "utf-8";
+/* CSS Document */
+
+body,ul,ol,li,p,h1,h2,h3,h4,h5,h6,form,fieldset,table,tr,td,img,div,dl,dt,dd,span{margin:0;padding:0; border:none;}
+body{color:#6d6d6d;font-size:12px; font-family:"宋体";background:url(../img/body-bg.jpg) repeat-x #3C7FB4;vertical-align:middle;}
+ul,ol{list-style-type:none;}
+select,input,img{vertical-align:middle;}
+a{text-decoration:none;color:#606060;}
+.clearit{clear:both; font-size:0; height:0; width:0; padding:0; margin:0; border:0;}
+.bh-clear{ clear:both;}
+
+/*==========================登录页面============================*/
+#bh-wzm-login-all{width:100%;height:100%;vertical-align:middle;}
+.bh-wzm-center{width:606px;height:609px; background:url(../img/center-bg.jpg) no-repeat; margin:0 auto;}
+/*.bh-wzm-left{float:left;width:29%;height:140px; background:url(../img/left-bg.jpg) repeat-x;margin-top:361px;}
+.bh-wzm-right{float:left;width:28.1%;height:140px; background:url(../img/left-bg.jpg) repeat-x;margin-top:361px;}*/
+
+.bh-wzm-center img{margin:124px 0 0 230px;}
+.bh-wzm-huanying{ font-size:30px; font-family:"黑体"; font-weight:bolder; color:#FFF;margin:51px 0 0 114px;}
+.bh-wzm-table{width:180px;height:140px;margin:60px 0 0 200px;}
+.bh-wzm-table tr{height:40px; line-height:40px;}
+.bh-wzm-yonhu{width:148px;height:29px; border:none; background:url(../img/ssk.jpg) no-repeat; line-height:29px;}
+.bh-wzm-dlu{width:64px;height:25px; background:url(../img/anniu.jpg) no-repeat; line-height:25px;color:#495c6b; border:none;}
+.bh-wzm-copyright{margin:60px 0 0 225px; color:#FFF;}

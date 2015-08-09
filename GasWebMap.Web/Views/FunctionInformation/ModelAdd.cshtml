@@ -1,0 +1,113 @@
+﻿@{
+    Layout = null;
+}
+
+<style>
+    .tableForm th {
+        text-align: right;
+        width: 100px;
+    }
+
+    .tableForm tr { height: 30px; }
+</style>
+<script type="text/javascript">
+
+
+    $(function() {
+        var formParam = {
+            url: 'api/auth',
+            success: function(result) {
+                var r = $.parseJSON(result);
+                if (r.success) {
+                    $.messager.show({
+                        title: '提示',
+                        msg: "OK"
+                    });
+                    $('#AddModelDialog').dialog('close');
+                } else {
+                    $.messager.show({
+                        title: '提示',
+                        msg: r.msg
+                    });
+                }
+            }
+        };
+
+        $('#AddModelForm').form(formParam);
+
+        var node = $('#modelTree').tree('getSelected');
+        if (node == null) {
+            parent.$.messager.alert('提示', '请选择要操作的模板！', 'warning');
+            return false;
+        } else {
+            $('#AddModelDialog').show().dialog({
+                modal: true,
+                title: '添加模板',
+                width: 250,
+                height: 150,
+                closable: true,
+                buttons: [
+                    {
+                        text: '确定',
+                        handler: function() {
+                            AddModel();
+                        }
+                    }, {
+                        text: '取消',
+                        handler: function() {
+                            $('#AddModelDialog').dialog('close');
+                        }
+                    }
+                ]
+            });
+        }
+    });
+
+    function AddModel() {
+        var node = $('#modelTree').tree('getSelected');
+        var name = document.getElementById("ModelID").value;
+        if (name == null || $.trim(name) == "") {
+            parent.$.messager.alert('提示', '请输入模板名称！', 'warning');
+            document.getElementById("modelTree").focus();
+            return false;
+        } else {
+            if (node) {
+                $.post('/api/model', { Name: name }, function(data, textStatus) {
+                    alert(data.Success);
+                }, "json");
+                var nodes = [
+                    {
+                        "text": name
+                    }
+                ];
+                $('#modelTree').tree('append', {
+                    parent: node.target,
+                    data: nodes
+                });
+                $('#AddModelDialog').dialog('close');
+            }
+        }
+    };
+
+</script>
+
+<div id="AddModelDialog" align="center">
+    <table>
+        <tr>
+            <td>
+                <form method="post" action="api/auth" id="AddModelForm">
+                    <table class="tableForm">
+                        <tr>
+                            <td style="text-align: center">
+                                模板名称:
+                            </td>
+                            <td>
+                                <input name="ModelName" id="ModelID" class="easyui-validatebox" data-options="required:true" style="width: 150px;" />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>

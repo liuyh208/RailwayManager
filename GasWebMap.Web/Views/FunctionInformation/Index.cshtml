@@ -1,0 +1,584 @@
+﻿@{
+    Layout = null;
+}
+
+<script type="text/javascript">
+    $('#groupTree').tree({
+        method: 'GET',
+        url: '../api/group',
+        onClick: function (node) {
+            $('#functionDataGrid').datagrid('clearSelections');
+            var node = $('#groupTree').tree('getSelected');
+            if (node != null) {
+                var id = node.id;
+                getData("/api/function",{ GroupID: id}, function (data, textStatus) {
+                    $('#functionDataGrid').datagrid('loadData', data);
+                });
+            }
+        }
+    });
+
+    $(function() {
+        $('#functionDataGrid').datagrid({
+            fit: true,
+            fitColumns: true,
+            border: false,
+            pagination: true,
+            idField: 'Id',
+            pageSize: 10,
+            pageList: [10, 20, 30, 40, 50],
+            sortName: 'Text',
+            sortOrder: 'asc',
+            checkOnSelect: true,
+            selectOnCheck: true,
+            singleSelect: true,
+            nowrap: false,
+            frozenColumns: [
+                [
+                    {
+                        field: 'Id',
+                        title: '功能编号',
+                        width: 150,
+                        checkbox: true
+                    }, {
+                        field: 'Text',
+                        title: '功能名称',
+                        width: 80,
+                        sortable: true,
+                        editor: 'text'
+                    }
+                ]
+            ],
+            columns: [
+                [
+                    {
+                        field: 'Url',
+                        title: '功能路径',
+                        width: 230,
+                        editor: 'text'
+                    }, {
+                        field: 'Source',
+                        title: '来源',
+                        width: 150
+                    }, {
+                        field: 'IsLock',
+                        title: '是否锁定',
+                        width: 50,
+                        formatter: function (value, row, index) {
+                            if (row.IsLock == false)
+                                return '<img src="/Images/lock_open.png"/>';
+                            else
+                                return '<img src="/Images/lock.png"/>';
+                    }
+                    }
+                ]
+            ],
+            toolbar: '#toolbar5'
+        });
+        loadFunction();
+    });
+
+    function pagerFilter(data) {
+        if (typeof data.length == 'number' && typeof data.splice == 'function') {
+            data = {
+                total: data.length,
+                rows: data
+            }
+        }
+        var dg = $(this);
+        var opts = dg.datagrid('options');
+        var pager = dg.datagrid('getPager');
+        pager.pagination({
+            onSelectPage: function (pageNum, pageSize) {
+                opts.pageNumber = pageNum;
+                opts.pageSize = pageSize;
+                pager.pagination('refresh', {
+                    pageNumber: pageNum,
+                    pageSize: pageSize
+                });
+                dg.datagrid('loadData', data);
+            }
+        });
+        if (!data.originalRows) {
+            data.originalRows = (data.rows);
+        }
+        var start = (opts.pageNumber - 1) * parseInt(opts.pageSize);
+        var end = start + parseInt(opts.pageSize);
+        data.rows = (data.originalRows.slice(start, end));
+        return data;
+    }
+
+    function loadFunction() {
+        getData("/api/function", null, function (data, textStatus) {
+            $('#functionDataGrid').datagrid({ loadFilter: pagerFilter }).datagrid('loadData', data)
+        });
+    }
+
+    function updateFunctionData() {
+        var node = $('#groupTree').tree('getSelected');
+        if (node)
+        {
+            var id = node.id;
+            getData("/api/function", { GroupID: id }, function (data, textStatus) {
+                $('#functionDataGrid').datagrid({ loadFilter: pagerFilter }).datagrid('loadData', data)
+            });
+        }
+        else {
+            loadFunction();
+        }
+    }
+
+    function deleteFunctionData() {
+        var node = $('#groupTree').tree('getSelected');
+        if (node)
+        {
+            var id = node.id;
+            getData("/api/function", { GroupID: id }, function (data, textStatus) {
+                $('#functionDataGrid').datagrid({ loadFilter: pagerFilter }).datagrid('loadData', data)
+            });
+        }
+        else {
+            loadFunction();
+        }
+        
+    }
+
+    function AddFunction() {
+        var node = $('#groupTree').tree('getSelected');
+        if (node == null) {
+            parent.$.messager.alert('提示', '请先选择功能分组！', 'warning');
+            return false;
+        } else {
+        $("#FunctionNameID").val("");
+        $("#UrlID").val("");
+        $('#AddFunctionDialog').show().dialog({
+            modal: true,
+            title: '添加功能',
+            width: 280,
+            height: 150,
+            closable: true,
+            buttons: [
+                {
+                    text: '确定',
+                    handler: function () {
+                        addFunction();
+                    }
+                }, {
+                    text: '取消',
+                    handler: function () {
+                        $('#AddFunctionDialog').dialog('close');
+                    }
+                }
+            ]
+        });
+    }
+    }
+
+    function showAddGroupDialog() {
+        $("#GroupID").val("");
+        $('#AddGroupDialog').show().dialog({
+            modal: true,
+            title: '添加分组',
+            width: 250,
+            height: 150,
+            closable: true,
+            buttons: [
+                {
+                    text: '确定',
+                    handler: function () {
+                        AddGroup();
+                    }
+                }, {
+                    text: '取消',
+                    handler: function () {
+                        $('#AddGroupDialog').dialog('close');
+                    }
+                }
+            ]
+        });
+    }
+
+
+    function ShowUpdateGroupDialog() {
+        $("#UpdateGroupID").val("");
+        $('#UpdateGroupDialog').show().dialog({
+            modal: true,
+            title: '修改分组',
+            width: 250,
+            height: 150,
+            closable: true,
+            buttons: [
+                {
+                    text: '确定',
+                    handler: function () {
+                        Update();
+                    }
+                }, {
+                    text: '取消',
+                    handler: function () {
+                        $('#UpdateGroupDialog').dialog('close');
+                    }
+                }
+            ]
+        });
+    }
+    function UpdateGroup() {
+        var node = $('#groupTree').tree('getSelected');
+        if (node == null) {
+            parent.$.messager.alert('提示', '请选择要修改的分组！', 'warning');
+            return false;
+        } else {
+            ShowUpdateGroupDialog();
+        }
+    }
+
+    function AddGroup() {
+        var GroupID = "f0e27d26-e143-4ce1-a681-bb64d5a8c6b4";
+        var node = $('#groupTree').tree('getSelected');
+        var name = document.getElementById("GroupID").value;
+        if (name == null || $.trim(name) == "") {
+            parent.$.messager.alert('提示', '请输入分组名称！', 'warning');
+            return false;
+        } else {
+            if (node) {
+                var id = node.id;
+                postData("/api/group", { Text: name, ParentID: id }, function (data, textStatus) {
+                    parent.$.messager.alert('提示', '添加成功！', 'warning');
+                    var nodes = [
+                    {
+                        "text": name
+                    }
+                    ];
+                    $('#groupTree').tree('append', {
+                        parent: node.target,
+                        data: nodes
+                    });
+                    $('#AddGroupDialog').dialog('close');
+                }, function (data, status, e) {
+                    parent.$.messager.alert('提示', '添加失败，错误信息:' + e, 'warning');
+                });
+                
+            }
+            else {
+                var node = $('#groupTree').tree('find',GroupID);
+                postData("/api/group", { Text: name, ParentID: GroupID }, function (data, textStatus) {
+                    parent.$.messager.alert('提示', '添加成功！', 'warning');
+                    var nodes = [
+                    {
+                        "text": name
+                    }
+                    ];
+                    $('#groupTree').tree('append', {
+                        parent: node.target,
+                        data: nodes
+                    });
+                    $('#AddGroupDialog').dialog('close');
+                }, function (data, status, e) {
+                    parent.$.messager.alert('提示', '添加失败，错误信息:' + e, 'warning');
+                });
+                
+            }
+        }
+    };
+
+    function Update() {
+        var node = $('#groupTree').tree('getSelected');
+        var name = document.getElementById("UpdateGroupID").value;
+        if (name == null || $.trim(name) == "") {
+            parent.$.messager.alert('提示', '请输入分组名称！', 'warning');
+            return false;
+        } else {
+            if (node) {
+                var id = node.id;
+                putData("/api/group", { ID: id, Text: name }, function (data, textStatus) {
+                    parent.$.messager.alert('提示', '修改成功！', 'warning');
+                    node.text = '<span>' + name + '<\/span>';
+                    $('#groupTree').tree('update', node);
+                    $('#UpdateGroupDialog').dialog('close');
+                }, function (data, status, e) {
+                    parent.$.messager.alert('提示', '修改失败，错误信息:' + e, 'warning');
+                });
+            }
+        }
+    }
+
+    function RemoveGroup() {
+        var node = $('#groupTree').tree('getSelected');
+        if (node == null) {
+            parent.$.messager.alert('提示', '请选择要删除的分组！', 'warning');
+            return false;
+        } else {
+            parent.$.messager.confirm('询问', '您是否要删除选中的分组？', function (b) {
+                if (b) {
+            var id = node.id;
+                    $.ajax({
+                        type: 'delete',
+                        url: "/api/group/" + id,
+                        success: function (data, textStatus) {
+                parent.$.messager.alert('提示', '删除成功！', 'warning');
+                $('#groupTree').tree('remove', node.target);
+                        },
+                        error: function (data, status, e) {
+                parent.$.messager.alert('提示', '删除失败，错误信息:' + e, 'warning');
+                        }
+            });
+        }
+            });
+            
+        }
+    };
+
+    function addFunction() {
+        var node = $('#groupTree').tree('getSelected');
+        var groupID = node.id;
+        postData('/api/function', { Text: $('#FunctionNameID').val(), Url: $('#UrlID').val(), GroupID: groupID }, function (data, textStatus) {
+            parent.$.messager.alert('提示', '添加成功！', 'warning');
+            $('#functionDataGrid').datagrid('appendRow', data);
+            $('#AddFunctionDialog').dialog('close');
+        }, function (data, status, e) {
+            parent.$.messager.alert('提示', '添加失败，错误信息:' + e, 'warning');
+        });
+    }
+
+    function deleteFunction() {
+        var rows = $("#functionDataGrid").datagrid("getChecked");
+        if (rows.length == 0) {
+            $.messager.alert('提示', '请选择要删除的功能！', 'warning');
+            return;
+        }
+        var dataID = [];
+        for (var i = 0, ln = rows.length; i < ln; i++) {
+            dataID.push(rows[i].Id);
+        }
+        parent.$.messager.confirm('询问', '您是否要删除选中的功能？', function (b) {
+            if (b) {
+                $.ajax({
+                    type: "delete",
+                    url: "/api/function2?format=json",
+                    contentType: 'application/json',
+                    data: dataID.toString(),
+                    datatype: "json",
+                    success: function (data, textStatus) {
+                        parent.$.messager.alert('提示', '删除成功！', 'warning');
+                        deleteFunctionData();
+                        $('#AddFunctionDialog').dialog('close');
+                    },
+                    error: function (data, status, e) {
+                        parent.$.messager.alert('提示', '删除失败，错误信息:' + e, 'warning');
+                    }
+                });
+                //deleteData("/api/function2?format=json", dataID.toString(), function (data, textStatus) {
+                //    parent.$.messager.alert('提示', '删除成功！', 'warning');
+                //    loadFunction();
+                //}, function (data, status, e) {
+                //    parent.$.messager.alert('提示', '删除失败，错误信息:' + e, 'warning');
+                //});
+            }
+        });
+    }
+
+    function UpdateFunction() {
+        var rows = $("#functionDataGrid").datagrid("getChecked");
+        if (rows.length == 0) {
+            $.messager.alert('提示', '请选择要编辑的功能！', 'warning');
+            return;
+        }
+        else {
+        if (rows.length == 1) {
+            var row = rows[0];
+                $("#UpdateFunctionNameID").val(row.Text);
+                $("#UpdateUrlID").val(row.Url);
+            }
+
+            $('#UpdateFunctionDialog').show().dialog({
+                modal: true,
+                title: '编辑功能',
+                width: 280,
+                height: 150,
+                closable: true,
+                buttons: [
+                    {
+                        text: '确定',
+                        handler: function () {
+                            editFunction();
+                        }
+                    }, {
+                        text: '取消',
+                        handler: function () {
+                            $('#UpdateFunctionDialog').dialog('close');
+                        }
+                    }
+                ]
+            });
+        }
+    }
+
+    function editFunction() {
+        var rows = $('#functionDataGrid').datagrid('getChecked');
+        if (rows.length == 1) {
+        var row = rows[0];
+        var id = row.Id;
+            var text = document.getElementById("UpdateFunctionNameID").value;
+            var url = document.getElementById("UpdateUrlID").value;
+            putData("/api/function", { ID: id.toString(), Text: text, Url: url }, function (data, textStatus) {
+                parent.$.messager.alert('提示', '编辑成功！', 'warning');
+                updateFunctionData();
+                $('#UpdateFunctionDialog').dialog('close');
+                }, function (data, status, e) {
+                parent.$.messager.alert('提示', '编辑失败，错误信息:' + e, 'warning');
+                });
+            }
+    }
+
+    function editLock() {
+        var rows = $("#functionDataGrid").datagrid("getChecked");
+        if (rows.length == 0) {
+            $.messager.alert('提示', '请选择要修改的功能！', 'warning');
+            return;
+        }
+        var dataID = [];
+        for (var i = 0, ln = rows.length; i < ln; i++) {
+            dataID.push(rows[i].Id);
+            if (i > 0 && rows[i].IsLock != rows[i - 1].IsLock) {
+                $.messager.alert('提示', '请选择锁定状态一致的功能！', 'warning');
+                return;
+            }
+        }
+        var data = { FunctionIds: dataID, IsLock: !rows[0].IsLock };
+        parent.$.messager.confirm('询问', '您是否确定要锁定/解锁选中功能？', function (b) {
+            if(b){
+            putData('/api/updateLock', data, function (data, textStatus) {
+                if (rows[0].IsLock)
+                    parent.$.messager.alert('提示', '解锁成功', 'warning');
+                else
+                    parent.$.messager.alert('提示', '锁定成功', 'warning');
+                loadFunction();
+            }, function (data, textStatus, errorThrown) {
+                alert(errorThrown);
+            });
+            }
+        });
+    }
+</script>
+    
+<div class="easyui-layout" data-options="fit:true,border:false">
+    <div data-options="region:'west',split:true" title="功能分组" style="width: 200px;">
+        <div style="padding-top: 1px; padding-bottom: 1px; padding-right: 1px; border-bottom: 1px solid #ddd; background-color: rgb(245, 245, 245); ">
+            <div id="toolbar3" style="text-align: right">
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-add" plain="true" onclick="showAddGroupDialog(); ">添加</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-edit" plain="true" onclick=" UpdateGroup(); ">修改</a>
+                <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-remove" plain="true" onclick=" RemoveGroup(); ">删除</a>
+            </div>
+            </div>
+            <ul id="groupTree" class="easyui-tree"></ul>
+        </div>
+    <div data-options="region:'center',title:'功能信息'">
+        <div id="toolbar5" style="text-align: right">
+            <a onclick=" AddFunction();" href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">添加</a>
+            <a onclick=" UpdateFunction(); " href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">编辑</a>
+            <a onclick=" deleteFunction(); " href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除</a>
+            <a onclick=" editLock(); " href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">锁定/解锁</a>
+        </div>
+        <table id="functionDataGrid"></table>
+    </div>
+</div>
+
+<div id="AddFunctionDialog" align="center" style="display:none">
+    <table>
+        <tr>
+            <td>
+                <form method="post" action="api/auth" id="AddFunctionForm">
+                    <table class="tableForm">
+                        <tr>
+                            <td style="text-align: right" width="100">
+                                功能名称:
+                            </td>
+                            <td style="text-align: left" width="200">
+                                <input name="FunctionName" id="FunctionNameID" class="easyui-validatebox" data-options="required:true" style="width: 150px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right" width="100">
+                                功能路径:
+                            </td>
+                            <td style="text-align: left" width="200">
+                                <input name="Url" id="UrlID" class="easyui-validatebox" data-options="required:true" style="width: 150px;" />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="AddGroupDialog" align="center" style="display:none">
+    <table>
+        <tr>
+            <td>
+                <form method="post" action="api/auth" id="AddGroupForm">
+                    <table class="tableForm">
+                        <tr>
+                            <td style="text-align: center">
+                                分组名称:
+                            </td>
+                            <td>
+                                <input name="GroupName" id="GroupID" class="easyui-validatebox" data-options="required:true" style="width: 150px;" />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="UpdateGroupDialog" align="center" style="display:none">
+    <table>
+        <tr>
+            <td>
+                <form method="post" action="api/auth" id="UpdateGroupForm">
+                    <table class="tableForm">
+                        <tr>
+                            <td style="text-align: center">
+                                分组名称:
+                            </td>
+                            <td>
+                                <input name="UpdateGroup" id="UpdateGroupID" class="easyui-validatebox" data-options="required:true" style="width: 150px;" />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<div id="UpdateFunctionDialog" align="center" style="display:none">
+    <table>
+        <tr>
+            <td>
+                <form method="post" action="api/auth" id="UpdateFunctionForm">
+                    <table class="tableForm">
+                        <tr>
+                            <td style="text-align: right" width="100">
+                                功能名称:
+                            </td>
+                            <td style="text-align: left" width="200">
+                                <input name="UpdateFunctionName" id="UpdateFunctionNameID" class="easyui-validatebox" data-options="required:true" style="width: 150px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right" width="100">
+                                功能路径:
+                            </td>
+                            <td style="text-align: left" width="200">
+                                <input name="UpdateUrl" id="UpdateUrlID" class="easyui-validatebox" data-options="required:true" style="width: 150px;" />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>

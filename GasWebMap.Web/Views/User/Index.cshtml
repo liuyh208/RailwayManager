@@ -1,0 +1,401 @@
+﻿@{
+    Layout = null;
+}
+<script type="text/javascript">
+    $(function () {
+        $('#userDataGrid').datagrid({
+            fit: true,
+            fitColumns: true,
+            border: false,
+            pagination: true,
+            idField: 'Id',
+            sortName: 'Name',
+            sortOrder: 'asc',
+            checkOnSelect: true,
+            selectOnCheck: true,
+            singleSelect: true,
+            nowrap: false,
+            frozenColumns: [
+                [
+                    {
+                        field: 'Id',
+                        title: '编号',
+                        width: 150,
+                        checkbox: true,
+                    }, {
+                        field: 'Name',
+                        title: '用户名',
+                        width: 80,
+                        sortable: true,
+                        editor: 'text'
+                    }
+                ]
+            ],
+            columns: [
+                [
+                    {
+                        field: 'HashedPassword',
+                        title: '密码',
+                        width: 60,
+                        formatter: function(value, row, index) {
+                            return '******';
+                        },
+                        editor: 'text'
+                    }, {
+                        field: 'Email',
+                        title: '邮箱',
+                        width: 150,
+                        editor: 'text'
+                    }
+                ]
+            ],
+            toolbar: '#toolbar',
+            onCheck: function (rowIndex, rowData) {
+                var userID = rowData.Id;
+                getData("/api/roletree", { UserId: userID.toString()}, function (data, textStatus) {
+                    $('#tree').tree('loadData', data);
+                });
+            }
+        });
+        loadUser();
+    });
+
+    function pagerFilter(data) {
+        if (typeof data.length == 'number' && typeof data.splice == 'function') {  
+            data = {
+                total: data.length,
+                rows: data
+            }
+        }
+        var dg = $(this);
+        var opts = dg.datagrid('options');
+        var pager = dg.datagrid('getPager');
+        pager.pagination({
+            onSelectPage: function (pageNum, pageSize) {
+                opts.pageNumber = pageNum;
+                opts.pageSize = pageSize;
+                pager.pagination('refresh', {
+                    pageNumber: pageNum,
+                    pageSize: pageSize
+                });
+                dg.datagrid('loadData', data);
+            }
+        });
+        if (!data.originalRows) {
+            data.originalRows = (data.rows);
+        }
+        var start = (opts.pageNumber - 1) * parseInt(opts.pageSize);
+        var end = start + parseInt(opts.pageSize);
+        data.rows = (data.originalRows.slice(start, end));
+        return data;
+    }
+
+
+    function loadUser() {
+        getData("/api/user", null, function (data, textStatus) {
+            $('#userDataGrid').datagrid({ loadFilter: pagerFilter }).datagrid('loadData', data)
+        });
+    }
+
+    function updateUserData() {
+        var node = $('#departmentTree').tree('getSelected');
+        if (node) {
+            var id = node.id;
+            getData("/api/user", { DepartID: id }, function (data, textStatus) {
+                $('#userDataGrid').datagrid({ loadFilter: pagerFilter }).datagrid('loadData', data)
+            });
+        }
+        else {
+            loadUser();
+        }
+    }
+
+    function deleteUserData() {
+        var node = $('#departmentTree').tree('getSelected');
+        if (node)
+        {
+            var id = node.id;
+            getData("/api/user", { DepartID: id }, function (data, textStatus) {
+                $('#userDataGrid').datagrid({ loadFilter: pagerFilter }).datagrid('loadData', data)
+            });
+        }
+        else {
+            loadUser();
+
+        }
+    }
+
+    function deleteUser() {
+        var rows = $("#userDataGrid").datagrid("getChecked");
+        if (rows.length == 0) {
+            $.messager.alert('提示', '请选择要删除的用户！', 'warning');
+            return;
+        }
+        var dataID = [];
+        for (var i = 0, ln = rows.length; i < ln; i++) {
+            dataID.push(rows[i].Id);
+        }
+        parent.$.messager.confirm('询问', '您是否要删除选中的用户？', function (b) {
+            if (b) {
+                $.ajax({
+                    type: "delete",
+                    url: "/api/user2?format=json",
+                    contentType: 'application/json',
+                    data: dataID.toString(),
+                    datatype: "json",
+                    success: function (data, textStatus) {
+                        parent.$.messager.alert('提示', '删除成功！', 'warning');
+                        deleteUserData();
+                    },
+                    error: function (data, status, e) {
+                        parent.$.messager.alert('提示', '删除失败，错误信息:' + e, 'warning');
+                    }
+                });
+                //deleteData("/api/user2?format=json",dataID.toString(),function (data, textStatus) {
+                //    parent.$.messager.alert('提示', '删除成功！', 'warning');
+                //    loadUser();
+                //}, function (data, status, e) {
+                //    parent.$.messager.alert('提示', '删除失败，错误信息:' + e, 'warning');
+                //});
+            }
+        }); 
+    }
+
+    function AddUser() {
+        var node = $('#departmentTree').tree('getSelected');
+        if (node == null) {
+            parent.$.messager.alert('提示', '请先选择部门！', 'warning');
+            return false;
+        } else {
+            $("#UserNameID").val("");
+            $("#PwdID").val("");
+            $("#userEmailID").val("");
+            $('#Telephone').val("");
+            $('#Sms').val("");
+            $('#AddUserInfoDialog').show().dialog({
+                modal: true,
+                title: '添加功能',
+                width: 400,
+                height: 300,
+                closable: true,
+                buttons: [
+                    {
+                        text: '确定',
+                        handler: function () {
+                            addUser1();
+                        }
+                    }, {
+                        text: '取消',
+                        handler: function () {
+                            $('#AddUserInfoDialog').dialog('close');
+                        }
+                    }
+                ]
+            });
+        }
+    }
+
+    function addUser1() {
+
+        var node = $('#departmentTree').tree('getSelected');
+        var departID = node.id;
+        var chkSms = document.getElementById('Sms');
+
+        postData('/api/user', {
+            Name: $('#UserNameID').val(),
+            Password: $('#PwdID').val(),
+            Email: $('#userEmailID').val(),
+            DeaprtID: departID,
+            Telephone: $('#Telephone').val(),
+            Sms: chkSms.checked
+        }, function (data, textStatus) {
+            parent.$.messager.alert('提示', '添加成功！', 'warning');
+            $('#userDataGrid').datagrid('appendRow', data);
+            $('#AddUserInfoDialog').dialog('close');
+        }, function (data, status, e) {
+            parent.$.messager.alert('提示', '添加失败，错误信息:' + e, 'warning');
+        });
+    }
+
+   
+
+    function UpdateUser() {
+        var rows = $("#userDataGrid").datagrid("getChecked");
+        if (rows.length == 0) {
+            $.messager.alert('提示', '请选择要编辑的用户！', 'warning');
+            return;
+        }
+        else {
+            if (rows.length == 1) {
+                var chkSms = document.getElementById('Sms1');
+                var row = rows[0];
+                $("#UpdateUserNameID").val(row.Name);
+                $("#UpdateUserPwdID").val(row.HashedPassword);
+                $("#UpdateUserEmailID").val(row.Email);
+                $("#Telephone1").val(row.Telephone);
+                chkSms.checked = row.SMS;
+            }
+            $('#UpdateUserDialog').show().dialog({
+                modal: true,
+                title: '添加功能',
+                width: 300,
+                height: 200,
+                closable: true,
+                buttons: [
+                    {
+                        text: '确定',
+                        handler: function () {
+                            editUser();
+                        }
+                    }, {
+                        text: '取消',
+                        handler: function () {
+                            $('#UpdateUserDialog').dialog('close');
+                        }
+                    }
+                ]
+            });
+        }
+    }
+
+    function editUser() {
+        var rows = $('#userDataGrid').datagrid('getChecked');
+        if (rows.length == 1) {
+            var row = rows[0];
+            var id = row.Id;
+            var name = document.getElementById("UpdateUserNameID").value;
+            var password = document.getElementById("UpdateUserPwdID").value;
+            var email = document.getElementById("UpdateUserEmailID").value;
+            var chkSms = document.getElementById('Sms1');
+            putData("/api/user", {
+                Id: id.toString(),
+                Name: name,
+                Password: password,
+                Telephone: $('#Telephone1').val(),
+                Sms: chkSms.checked,
+                Email: email
+            }, function (data, textStatus) {
+                parent.$.messager.alert('提示', '编辑成功！', 'warning');
+                updateUserData();
+                $('#UpdateUserDialog').dialog('close');
+            }, function (data, status, e) {
+                parent.$.messager.alert('提示', '编辑失败，错误信息:' + e, 'warning');
+            });
+        } 
+    }
+
+
+</script>
+
+
+<div id="toolbar" style="text-align: right">
+    <a onclick="AddUser(); " href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-add'">添加</a>
+    <a onclick="UpdateUser(); " href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-edit'">编辑</a>
+    <a onclick="deleteUser(); " href="javascript:void(0);" class="easyui-linkbutton" data-options="plain:true,iconCls:'icon-remove'">删除</a>
+</div>
+<table id="userDataGrid" ></table>
+
+<div id="AddUserInfoDialog" align="center">
+    <table>
+        <tr>
+            <td>
+                <form method="post" action="api/auth" id="AddUserInfoForm">
+                    <table class="tableForm">
+                        <tr>
+                            <td style="text-align: right" width="100">
+                                用户姓名:
+                            </td>
+                            <td style="text-align: left" width="200">
+                                <input name="UserName" id="UserNameID" class="easyui-validatebox" data-options="required:true" style="width: 150px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right" width="100">
+                                用户密码:
+                            </td>
+                            <td style="text-align: left" width="200">
+                                <input name="Pwd" id="PwdID" class="easyui-validatebox" data-options="required:true," type="password" style="width: 150px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right" width="100">
+                                邮箱:
+                            </td>
+                            <td style="text-align: left" width="200">
+                                <input name="userEmail" id="userEmailID" class="easyui-validatebox" data-options="required:true" validtype="email" style="width: 150px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right" width="100">
+                                电话:
+                            </td>
+                            <td style="text-align: left" width="200">
+                                <input name="Telephone" id="Telephone" class="easyui-validatebox" style="width: 150px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right" width="100">
+                                发送短信:
+                            </td>
+                            <td style="text-align: left" width="200">
+                                <input name="Sms" id="Sms" type="checkbox" style="width: 150px;" />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>
+<div id="UpdateUserDialog" align="center">
+    <table>
+        <tr>
+            <td>
+                <form method="post" action="api/auth" id="UpdateUserForm">
+                    <table class="tableForm">
+                        <tr>
+                            <td style="text-align: right" width="100">
+                                用户姓名:
+                            </td>
+                            <td style="text-align: left" width="200">
+                                <input name="UpdateUserName" id="UpdateUserNameID" class="easyui-validatebox" data-options="required:true" style="width: 150px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right" width="100">
+                                用户密码:
+                            </td>
+                            <td style="text-align: left" width="200">
+                                <input name="UpdateUserPwd" id="UpdateUserPwdID" class="easyui-validatebox" data-options="required:true," type="password" style="width: 150px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right" width="100">
+                                邮箱:
+                            </td>
+                            <td style="text-align: left" width="200">
+                                <input name="UpdateUserEmail" id="UpdateUserEmailID" class="easyui-validatebox" data-options="required:true" validtype="email" style="width: 150px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right" width="100">
+                                电话:
+                            </td>
+                            <td style="text-align: left" width="200">
+                                <input name="Telephone1" id="Telephone1" class="easyui-validatebox" style="width: 150px;" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: right" width="100">
+                                发送短信:
+                            </td>
+                            <td style="text-align: left" width="200">
+                                <input name="Sms1" id="Sms1" type="checkbox" style="width: 150px;" />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>

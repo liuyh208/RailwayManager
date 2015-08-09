@@ -1,0 +1,121 @@
+.menu {
+    border-style: solid;
+    border-width: 1px;
+    margin: 0;
+    overflow: hidden;
+    padding: 2px;
+    position: absolute;
+}
+
+.menu-item {
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    position: relative;
+    white-space: nowrap;
+}
+
+.menu-text {
+    float: left;
+    height: 20px;
+    line-height: 20px;
+    padding-left: 28px;
+}
+
+.menu-icon {
+    height: 16px;
+    left: 2px;
+    margin-top: -8px;
+    position: absolute;
+    top: 50%;
+    width: 16px;
+}
+
+.menu-rightarrow {
+    height: 16px;
+    margin-top: -8px;
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 16px;
+}
+
+.menu-line {
+    font-size: 1px;
+    height: 2000px;
+    left: 26px;
+    position: absolute;
+    top: 0;
+}
+
+.menu-sep {
+    font-size: 1px;
+    margin: 3px 0px 3px 25px;
+}
+
+.menu-active {
+    -moz-border-radius: 5px 5px 5px 5px;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    border-radius: 5px 5px 5px 5px;
+}
+
+.menu-item-disabled {
+    cursor: default;
+    filter: alpha(opacity=50);
+    opacity: 0.5;
+}
+
+.menu-text,
+.menu-text span { font-size: 12px; }
+
+.menu-shadow {
+    -moz-border-radius: 5px 5px 5px 5px;
+    -moz-box-shadow: 2px 2px 3px #787878;
+    -webkit-border-radius: 5px 5px 5px 5px;
+    -webkit-box-shadow: 2px 2px 3px #787878;
+    background: #777;
+    border-radius: 5px 5px 5px 5px;
+    box-shadow: 2px 2px 3px #787878;
+    filter: progid:DXImageTransform.Microsoft.Blur(pixelRadius=2, MakeShadow=false, ShadowOpacity=0.2);
+    position: absolute;
+}
+
+.menu-rightarrow { background: url('images/menu_arrows.png') no-repeat -32px center; }
+
+.menu-line {
+    border-left: 1px solid #444;
+    border-right: 1px solid #777;
+}
+
+.menu-sep {
+    border-bottom: 1px solid #777;
+    border-top: 1px solid #444;
+}
+
+.menu {
+    background-color: #666;
+    border-color: #444;
+    color: #fff;
+}
+
+.menu-content { background: #666; }
+
+.menu-item {
+    border-color: transparent;
+    _border-color: #666;
+}
+
+.menu-active {
+    background: #777;
+    border-color: #555;
+    color: #fff;
+}
+
+.menu-active-disabled {
+    background: transparent;
+    border-color: transparent;
+    color: #fff;
+}

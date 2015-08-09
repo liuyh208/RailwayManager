@@ -1,0 +1,169 @@
+﻿
+<link href="~/Content/uploadify/uploadify.css" rel="stylesheet" />
+<script src="~/Content/jquery.sudoSlider.min.js"></script>
+<script src="~/Content/uploadify/jquery.uploadify.min.js"></script>
+<style>
+    #slider {
+        margin: 0 auto;
+        width: 90%;
+        height: 85%;
+    }
+    #btCancel {
+        display: none;
+    }
+    #btUpload {
+        display: none;
+    }
+</style>
+<script type="text/javascript">
+    
+
+    var sudoSlider;
+    var imgArr = [];
+    var name = '@ViewBag.ID';
+    $(function () {
+        $(document).ready(function () {
+            
+           
+            var canAddpic=@ViewBag.CanAdd;
+            
+            getData("/api/deviceImage", {
+                DeviceID: name
+            }, function (data) {
+                
+                $(data).each(function (i, item) {
+                    imgArr.push("../Files/" + item.FileName);
+                });
+                if (imgArr.length > 0) {
+                    sudoSlider = $("#slider").sudoSlider({
+                        ajax: imgArr,
+                        effect: "random",
+                        responsive: false,
+                        numeric: true
+                    });
+                }
+               
+            });
+            if (canAddpic) {
+                
+            
+            $('#fileupload').uploadify({
+                'auto': false,
+                'buttonClass': 'easyui-linkbutton',
+                'buttonText': '选择图片',
+                'fileTypeDesc': '图片文件',
+                'fileTypeExts': '*.gif; *.jpg; *.png',
+                'swf': '@Url.Content("~/Content/uploadify/uploadify.swf")',
+                'uploader': '../Device/Upload',
+                'onSelect': function (file) {
+                    $('#btUpload').show();
+                    $('#btCancel').show();
+                },
+                'onClearQueue': function (queueItemCount) {
+                    $('#btUpload').hide();
+                    $('#btCancel').hide();
+                },
+                'onUploadSuccess': function (file, data, response) {
+
+                    var d = eval('(' + data + ')');
+                    imgArr.push('../Files/' + d.SaveName);
+                    if (sudoSlider!=null) {
+                        sudoSlider.destroy();
+                    }
+                    
+                    $("#slider")[0].innerHTML = "";
+
+                    sudoSlider = $("#slider").sudoSlider({
+                        responsive: false,
+                        ajax: imgArr,
+                        effect: "random",
+
+                        numeric: true
+
+                    });
+
+                    $('#btUpload').hide();
+                    $('#btCancel').hide();
+
+                    var img = { DeviceID: name, ImageName: d.SaveName };
+                    postData('api/deviceImage', img);
+                }
+
+            });
+            };
+
+
+        });
+    });
+
+    function deleteImage(){
+
+        var currentSlide = sudoSlider.getValue('currentSlide');
+        var imageID=imgArr[currentSlide-1];
+        imageID=imageID.substring(9,imageID.length);
+        $.messager.confirm('删除', '确定要删除当前的图片吗', function(r){
+            if (r){
+                getData("/api/deleteImage", {
+                    DeviceID: name,
+                    ImageID:imageID
+                }, function (data) {
+                    imgArr=[];
+                    if (sudoSlider!=null) {
+                        sudoSlider.destroy();
+                    }
+                    $("#slider")[0].innerHTML = "";
+
+                    $(data).each(function (i, item) {
+                        imgArr.push("../Files/" + item.FileName);
+                    });
+                    if (imgArr.length > 0) {
+                        sudoSlider = $("#slider").sudoSlider({
+                            ajax: imgArr,
+                            effect: "random",
+                            responsive: false,
+                            numeric: true
+                        });
+                    }
+               
+                });
+            }
+        });
+        //sudoSlider.removeSlide(2);
+        //sudoSlider.destroy();
+        //imgArr.remove(2);
+        //sudoSlider = $("#slider").sudoSlider({
+        //    responsive: false,
+        //    ajax: imgArr,
+        //    effect: "random",
+        //    numeric: true
+        //});
+        
+        //$("#controls").empty();
+        //$("#controls").find("ol")
+        return false;
+    }
+
+</script>
+
+<table>
+    <tr>
+        <td width="150px">
+            <input id="fileupload" type="file" name="files[]">   
+            <a href="javascript:void(0)" id="btUpload" class="easyui-linkbutton" iconcls="icon-add" plain="true" onclick="javascript: $('#fileupload').uploadify('upload', '*');">开始上传</a>
+            <a href="javascript:void(0)" id="btCancel" class="easyui-linkbutton" iconcls="icon-cancel" plain="true" onclick="javascript: $('#fileupload').uploadify('cancel', '*');">取消</a>
+        </td>
+        <td><a href="javascript:void(0)" id="btDelete" class="easyui-linkbutton" iconcls="icon-remove" plain="true" onclick="javascript:deleteImage();">删除</a></td>
+    </tr>
+    <tr>
+        <td colspan="2"><div id="slider">
+
+</div></td>
+        
+    </tr>
+</table>
+
+
+
+       
+
+

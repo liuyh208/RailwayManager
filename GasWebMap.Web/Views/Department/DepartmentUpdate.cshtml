@@ -1,0 +1,111 @@
+﻿@{
+    Layout = null;
+}
+
+<style>
+    .tableForm th {
+        text-align: right;
+        width: 100px;
+    }
+
+    .tableForm tr { height: 30px; }
+</style>
+<script type="text/javascript">
+    $(function() {
+        var formParam = {
+            url: 'api/auth',
+            success: function(result) {
+                var r = $.parseJSON(result);
+                if (r.success) {
+                    $.messager.show({
+                        title: '提示',
+                        msg: "OK"
+                    });
+                    $('#UpdateDepartmentDialog').dialog('close');
+                } else {
+                    $.messager.show({
+                        title: '提示',
+                        msg: r.msg
+                    });
+                }
+            }
+        };
+
+        $('#UpdateDepartmentForm').form(formParam);
+
+        var node = $('#departmentTree').tree('getSelected');
+        if (node == null) {
+            parent.$.messager.alert('提示', '请选择要修改的部门！', 'warning');
+            return false;
+        } else {
+            $('#UpdateDepartmentDialog').show().dialog({
+                modal: true,
+                title: '修改部门',
+                width: 250,
+                height: 150,
+                closable: true,
+                buttons: [
+                    {
+                        text: '确定',
+                        handler: function() {
+                            UpdateDepartment();
+                        }
+                    }, {
+                        text: '取消',
+                        handler: function() {
+                            $('#UpdateDepartmentDialog').dialog('close');
+                        }
+                    }
+                ]
+            });
+        }
+    });
+
+    function UpdateDepartment() {
+        var node = $('#departmentTree').tree('getSelected');
+        var name = document.getElementById("DeptNameID").value;
+        if (name == null || $.trim(name) == "") {
+            parent.$.messager.alert('提示', '请输入部门名称！', 'warning');
+            return false;
+        } else {
+            if (node) {
+                var id = node.id;
+                $.ajax({
+                    type: "put",
+                    url: "/api/department",
+                    data: { ID: id, Name: name },
+                    success: function(data, textStatus) {
+                        parent.$.messager.alert('提示', '修改成功！', 'warning');
+                    },
+                    error: function(data, status, e) {
+                        parent.$.messager.alert('提示', '修改失败，错误信息:' + e, 'warning');
+                    }
+                });
+                node.text = '<span>' + name + '<\/span>';
+                $('#departmentTree').tree('update', node);
+                $('#UpdateDepartmentDialog').dialog('close');
+            }
+        }
+    }
+</script>
+
+<div id="UpdateDepartmentDialog" align="center">
+    <table>
+        <tr>
+            <td>
+                <form method="post" action="api/auth" id="UpdateDepartmentForm">
+                    <table class="tableForm">
+                        <tr>
+                            <td style="text-align: center">
+                                部门名称:
+                            </td>
+                            <td>
+                                <input name="DeptName" id="DeptNameID" class="easyui-validatebox" data-options="required:true" style="width: 150px;" />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </td>
+        </tr>
+    </table>
+</div>

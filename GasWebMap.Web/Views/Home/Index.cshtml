@@ -1,0 +1,161 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head>
+
+        <meta charset="utf-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>计量仪器管理系统</title>
+
+        <script src="~/Content/easyUI/jquery.min.js"></script>
+        <script src="~/Content/easyUI/jquery.easyui.min.js" type="text/javascript"></script>
+        <script src="~/Content/easyUI/locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="~/Content/easyUI/plugins/jquery.edatagrid.js"></script>
+
+        <script src="~/Content/html5shiv.3.7.min.js"></script>
+        <script src="~/Content/jquery.json-2.4.min.js"></script>
+        <link href="~/Content/easyUI/themes/icon.css" rel="stylesheet" />
+        <link href="~/Content/easyUI/themes/bootstrap/easyui.css" rel="stylesheet" />
+
+        @*<script src="~/Content/jquery-ui-1.10.4.min.js"></script>
+        <script src="~/Content/jquery.fileupload.js"></script>
+        <script src="~/Content/jquery.xdr-transport.js"></script>*@
+
+        <link href="~/Content/Style.css" rel="stylesheet" />
+        <!-- arcgis -->
+
+
+
+        <script src="~/Content/main.js" type="text/javascript"></script>
+
+        <style>
+            .mb {
+                display: inline;
+                list-style-type: none;
+                margin: 0px;
+                padding: 0px;
+                width: 100%;
+            }
+
+            .mb li {
+                float: left;
+                padding-left: 20px;
+                padding-top: 10px;
+                width: 94%;
+            }
+
+            .mb li a {
+                display: block;
+                font-size: 18px;
+                width: 100%;
+            }
+
+            .mb li a:hover {
+                color: #99CCFF;
+                cursor: pointer;
+                font-weight: bold;
+            }
+
+            .menuTable { width: 100%; }
+
+            .menuTable tr:hover {
+                color: Red;
+                cursor: pointer;
+                font-weight: bold;
+            }
+
+            .menu2:hover {
+                background: red;
+                cursor: pointer;
+            }
+
+            .menu2 { }
+
+            .menulable {
+                font-size: 16px;
+                font-weight: bold;
+                line-height: 32px;
+            }
+
+
+            .ftitle {
+                font-size: 14px;
+                font-weight: bold;
+                padding: 5px 0;
+                margin-bottom: 10px;
+                border-bottom: 1px solid #ccc;
+            }
+
+            .fitem {
+                margin-bottom: 5px;
+            }
+
+                .fitem label {
+                    display: inline-block;
+                    width: 80px;
+                }
+
+                .fitem input {
+                    width: 200px;
+                }
+        </style>
+    </head>
+<body class="claro">
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $.ajaxSetup({ cache: false });
+        });
+
+    </script>
+
+
+
+    <div id="divlayout" class="easyui-layout" data-options="fit:true">
+        <div data-options="region:'north',border:false,split:false" style="height: 60px;">
+            <table style="height: 56px; width: 100%;">
+                <tr>
+                    <td style="text-align: left; vertical-align: middle; width: 0px;">
+                        <img src="/Images/logo.gif"
+                             style="height:40px; width: 180px;" />
+                    </td>
+
+                    <td style="font-size: 28px; font-weight: bold; vertical-align: middle;">计量仪器管理系统</td>
+                    <td style="width: auto;"></td>
+                    <td id="tdlogin" style="text-align: right; width: 100px;"><b>欢迎你 @ViewBag.UserName </b></td>
+                    <td id="tdExit" style="text-align: center; width: 50px;"><a href="../login/logout">退出</a></td>
+                    <td style="width: 30px;"></td>
+                </tr>
+            </table>
+        </div>
+        <div id="divLeft" data-options="region:'west',split:true,href:'/menu/index/@ViewBag.MenuID'" title="菜单" style="width: 200px;">
+
+        </div>
+        <div data-options="region:'center'" >
+            <div id="divcenter" class="easyui-tabs" data-options="fit:true" style="height:100%;">
+                @if (ViewBag.ShowEdit)
+                {
+                    <div id="仪器台账" title="仪器台账" data-options="href:'/device/index',fit:true" style="height: 100%; position: absolute;  width: 100%; ">
+                    </div>
+                }
+                else
+                {
+                    <div id="mapdiv" title="仪器台账" data-options="href:'/device/index2',fit:true" style="height: 100%; position: absolute; top: 32px; width: 100%;">
+                    </div>
+                }
+
+
+            </div>
+        </div>
+            <div id="dlg22" closed="true">
+
+            </div>
+
+        </div>
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+﻿<div style="padding-top: 1px; padding-bottom: 1px; padding-right: 1px; border-bottom: 1px solid #ddd; background-color: rgb(245, 245, 245); ">
+    <div id="toolbar1" style="text-align: right">
+        <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-save" plain="true" onclick="Save();">保存</a>
+    </div>
+</div>
+    <ul id="tree" class="easyui-tree"></ul>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#tree').tree({
+                checkbox: true,
+                method: 'GET',
+                url: '../api/roletree?f=json'
+            });
+        })
+
+        function Save() {
+            var node = $("#tree").tree("getChecked");
+            var roleID = node[0].id;
+            var row = $("#userDataGrid").datagrid("getChecked");
+            var userID = row[0].Id;
+            postData("/api/userrole",{ RoleID: roleID, UserId: userID},function (data, textStatus) {
+                parent.$.messager.alert('提示', '保存成功！', 'warning');
+            }, function (data, status, e) {
+                parent.$.messager.alert('提示', '保存失败，错误信息:' + e, 'warning');
+            });
+        }
+    </script>
