@@ -193,10 +193,15 @@
         $('#dgSlab').datagrid({
             fit: true,
             method: 'get',
+            pageSize:15,
+            pageList:[15,30,50],
             singleSelect: true,
-            url: '/api/Slab'
-
+            url: '/Slab/GetData'
         });
+
+        
+
+
         $("#btSeach2").click(function() {
             SearchData();
         });
@@ -227,7 +232,7 @@
     function addSlab() {
         $('#dlg').dialog('open').dialog('setTitle', '添加轨道板问题');
         $('#fm').form('clear');
-        url = '/api/Slab/Add?format=json';
+        url = '/Slab/Add';
     }
 
     function editSlab() {
@@ -235,7 +240,7 @@
         if (row) {
             $('#dlg').dialog('open').dialog('setTitle', '编辑轨道板问题');
             $('#fm').form('load', row);
-            url = '/api/Slab/edit?format=json';
+            url = '/Slab/edit';
 
         }
     }
@@ -247,8 +252,9 @@
             onSubmit: function() {
                 return $(this).form('validate');
             },
-            success: function(result) {
-                if (result.Success) {
+            success: function (data) {
+                
+                if (data == "") {
                     $('#dlg').dialog('close'); // close the dialog
                     $('#dgSlab').datagrid('reload'); // reload the user data
                     $.messager.show({
@@ -258,7 +264,7 @@
                 } else {
                     $.messager.show({
                         title: '错误',
-                        msg: result.Msg
+                        msg: data
                     });
                 }
             }
@@ -272,13 +278,14 @@
                 if (r) {
                     var rr = [];
                     rr.push(row.Id);
-                    postData('/api/Slab/delete', rr, function(result) {
+                    postData('/Slab/delete', rr, function (result) {
+                       
                         if (result.Success) {
                             $('#dgSlab').datagrid('reload'); // reload the user data
                         } else {
                             $.messager.show({
                                 title: '错误',
-                                msg: result.Msg
+                                msg: "删除失败"
                             });
                         }
                     });

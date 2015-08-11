@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web;
 using System.Web.Mvc;
+using GasWebMap.Core;
 using GasWebMap.Domain;
+using GasWebMap.Services.Dtos;
+using GasWebMap.Services.Responses;
 using GasWebMap.Services.Services;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
@@ -20,6 +24,84 @@ namespace GasWebMap.Web.Controllers
         public ActionResult Index()
         {
             return View();
+        }
+
+        public JsonResult GetData(SlabGet request)
+        {
+            var rep = AppEx.Container.GetRepository<SlabProblem>();
+        
+            bool bl = request.order == "asc";
+
+            Expression<Func<SlabProblem, bool>> filter = t => t.Id != null;
+            if (!string.IsNullOrWhiteSpace(request.RailWay))
+            {
+                filter = filter.And(t => t.RailWay == request.RailWay);
+            }
+
+            if (!string.IsNullOrWhiteSpace(request.RunType))
+            {
+                filter = filter.And(t => t.RunType == request.RunType);
+            }
+            var result = rep.GetPagedEntities(filter, t => t.CheckDate, bl, request.Page, request.Rows);
+
+            var r= new PageData<SlabProblem>(result.Result, result.Total);
+            return Json(r, JsonRequestBehavior.AllowGet);
+        }
+
+
+        public JsonResult Delete(List<Guid> request)
+        {
+
+            try
+            {
+                var rep = AppEx.Container.GetRepository<SlabProblem>();
+                rep.DeleteByIDs(request);
+                return Json(new { Success = true }, JsonRequestBehavior.AllowGet);
+                //return Content("", "text/html;charset=UTF-8");
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Success = false, Message = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+       // [HttpPost]
+        public ActionResult Add(SlabProblem slab)
+        {
+            try
+            {
+                var rep = AppEx.Container.GetRepository<SlabProblem>();
+                slab.Id = Guid.NewGuid();
+
+                rep.Add(slab);
+                return Content("", "text/html;charset=UTF-8");
+            }
+            catch (Exception ex)
+            {
+                return Content("添加失败", "text/html;charset=UTF-8");
+            }
+            
+            
+           
+        }
+
+        public ActionResult Edit(SlabProblem slab)
+        {
+            try
+            {
+                var rep = AppEx.Container.GetRepository<SlabProblem>();
+
+                rep.Update(slab);
+                return Content("", "text/html;charset=UTF-8");
+            }
+            catch (Exception ex)
+            {
+                return Content("添加失败", "text/html;charset=UTF-8");
+            }
+
+
+
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
