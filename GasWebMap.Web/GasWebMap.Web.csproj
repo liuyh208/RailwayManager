@@ -174,7 +174,6 @@
     <Content Include="Content\easyUI\jquery.easyui.mobile.js" />
     <Content Include="Content\easyUI\jquery.min.js" />
     <Content Include="Content\easyUI\licence_gpl.txt" />
-    <Content Include="Content\easyUI\license_commercial.txt" />
     <Content Include="Content\easyUI\locale\easyui-lang-af.js" />
     <Content Include="Content\easyUI\locale\easyui-lang-am.js" />
     <Content Include="Content\easyUI\locale\easyui-lang-ar.js" />
@@ -212,7 +211,6 @@
     <Content Include="Content\easyUI\plugins\jquery.dialog.js" />
     <Content Include="Content\easyUI\plugins\jquery.draggable.js" />
     <Content Include="Content\easyUI\plugins\jquery.droppable.js" />
-    <Content Include="Content\easyUI\plugins\jquery.edatagrid.js" />
     <Content Include="Content\easyUI\plugins\jquery.filebox.js" />
     <Content Include="Content\easyUI\plugins\jquery.form.js" />
     <Content Include="Content\easyUI\plugins\jquery.layout.js" />

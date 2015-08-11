@@ -47,9 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Entities\SlabProblem.cs" />
     <Compile Include="Entities\DeviceInfo.cs" />
     <Compile Include="Entities\ImageStore.cs" />
+    <Compile Include="Entities\SlabProblem.cs" />
     <Compile Include="Sys\Department.cs" />
     <Compile Include="Sys\MenuInfoGroup.cs" />
     <Compile Include="Sys\Role.cs" />
