@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using GasWebMap.Services.Base;
 using ServiceStack.ServiceInterface.Auth;
 
 namespace GasWebMap.Services.Responses
 {
-    public class CustomUserSession : AuthUserSession
+    public class CustomUserSession : AuthUserSession, ICustomSession
     {
         
         public Guid? UserID { get; set; }

@@ -13,7 +13,12 @@ namespace GasWebMap.Domain
     public class SlabProblem : EntityBase
     {
         public Guid? DepartmentID { get; set; }
-     
+
+        /// <summary>
+        /// 车间
+        /// </summary>
+        /// <value>The workshop.</value>
+        public string Workshop { get; set; }
         /// <summary>
         /// 线别
         /// </summary>

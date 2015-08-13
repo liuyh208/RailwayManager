@@ -58,8 +58,8 @@
     <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-add" plain="true" onclick="addSlab()">添加</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-edit" plain="true" onclick="editSlab()">修改</a>
     <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-remove" plain="true" onclick="deleteSlab()">删除</a>
-    <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-excel" plain="true" onclick="importData();">导入数据</a>
- 
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-undo" plain="true" onclick="importData();">导入数据</a>
+    <a href="javascript:void(0)" class="easyui-linkbutton" iconcls="icon-redo" plain="true" onclick="bsuExportCsv2();">导出数据</a>
 </div>
 
 
@@ -67,11 +67,12 @@
      closed="true" buttons="#dlg-buttons">
 
     <form id="fm" method="post" novalidate>
-        <input type="hidden" name="Id"/>
+        <input type="hidden" name="Id" id="pId"/>
+
         <div class="fitem">
             <label>线别:</label>
-            <select class="easyui-combobox" name="RailWay" style="width: 204px;">
-                <option value="京广高铁" selected >京广高铁</option>
+            <select class="easyui-combobox" name="RailWay" id="pRailWay" style="width: 204px;">
+                <option value="京广高铁" selected>京广高铁</option>
                 <option value="京沪高铁">京沪高铁</option>
                 <option value="京津城际">京津城际</option>
                 <option value="津秦高铁">津秦高铁</option>
@@ -79,27 +80,27 @@
         </div>
         <div class="fitem">
             <label>行别:</label>
-            <select class="easyui-combobox" name="RunType" style="width: 204px;">
+            <select class="easyui-combobox" name="RunType" id="pRunType" style="width: 204px;">
                 <option value="上行" selected >上行</option>
                 <option value="下行">下行</option>
             </select>
         </div>
         <div class="fitem">
             <label>里程:</label>
-            <input name="Mileage" class="easyui-textbox">
+            <input name="Mileage" id="pMileage" class="easyui-textbox">
         </div>
         <div class="fitem">
             <label>起点板号:</label>
-            <input name="StartBoardID" class="easyui-textbox">
+            <input name="StartBoardID" id="pStartBordID" class="easyui-textbox">
         </div>
         <div class="fitem">
             <label>承轨台号:</label>
-            <input name="SupportRailID" class="easyui-textbox">
+            <input name="SupportRailID" id="pSupportRailID" class="easyui-textbox">
         </div>
         <div class="fitem">
             <label>伤损项目:</label>
-            <select class="easyui-combobox" name="HurtItem" style="width: 204px;">
-                <option value="轨道板" selected >轨道板</option>
+            <select class="easyui-combobox" id="pHurtItem" name="HurtItem" style="width: 204px;">
+                <option value="轨道板" selected>轨道板</option>
                 <option value="底座板（支撑层）">底座板（支撑层）</option>
                 <option value="CA砂浆层">CA砂浆层</option>
                 <option value="板间接缝">板间接缝</option>
@@ -109,12 +110,16 @@
         </div>
         <div class="fitem">
             <label>伤损位置:</label>
-            <input name="HurtPosition" class="easyui-textbox">
+
+            <select class="easyui-combobox" name="HurtPosition" id="pHurtPosition" style="width: 204px;">
+                <option value="灌浆孔" selected>灌浆孔</option>
+                <option value="剪力筋">剪力筋</option>
+            </select>
         </div>
         <div class="fitem">
             <label>伤损形式:</label>
-            <select class="easyui-combobox" name="HurtStyle" style="width: 204px;">
-                <option value="裂纹" selected >裂纹</option>
+            <select class="easyui-combobox" name="HurtStyle" id="pHurtStyle" style="width: 204px;">
+                <option value="裂纹" selected>裂纹</option>
                 <option value="掉块">掉块</option>
                 <option value="其他">其他</option>
                 <option value="失效">失效</option>
@@ -124,47 +129,47 @@
         </div>
         <div class="fitem">
             <label>长:</label>
-            <input name="Length" class="easyui-numberbox" precision="2">
+            <input name="Length" id="pLength" class="easyui-numberbox" precision="2">
         </div>
         <div class="fitem">
             <label>宽:</label>
-            <input name="Width" class="easyui-numberbox" precision="2">
+            <input name="Width" id="pWidth" class="easyui-numberbox" precision="2">
         </div>
         <div class="fitem">
             <label>高:</label>
-            <input name="Height" class="easyui-numberbox" precision="2">
+            <input name="Height" id="pHeight" class="easyui-numberbox" precision="2">
         </div>
         <div class="fitem">
             <label>伤损等级:</label>
-            <input name="HurtLevel" class="easyui-textbox">
+            <input name="HurtLevel" id="pHurtLevel" class="easyui-textbox">
         </div>
         <div class="fitem">
             <label>检测日期:</label>
-            <input name="CheckDate" class="easyui-datebox" style="width: 204px;">
+            <input name="CheckDate" id="pCheckDate" class="easyui-datebox" style="width: 204px;">
         </div>
         <div class="fitem">
             <label>检测人:</label>
-            <input name="Checker" class="easyui-textbox">
+            <input name="Checker" id="pChecker" class="easyui-textbox">
         </div>
         <div class="fitem">
             <label>影像资料:</label>
-            <input name="Movie" class="easyui-textbox">
+            <input name="Movie" id="pMovie" class="easyui-textbox">
         </div>
         <div class="fitem">
             <label>采取措施:</label>
-            <input name="TakeMeasures" class="easyui-textbox">
+            <input name="TakeMeasures" id="pTakeMeasures" class="easyui-textbox">
         </div>
         <div class="fitem">
             <label>销号日期:</label>
-            <input name="LogoutDate" class="easyui-datebox" style="width: 204px;">
+            <input name="LogoutDate" id="pLogoutDate" class="easyui-datebox" style="width: 204px;">
         </div>
         <div class="fitem">
             <label>销号人:</label>
-            <input name="LogoutMan" class="easyui-textbox">
+            <input name="LogoutMan" id="pLogoutMan" class="easyui-textbox">
         </div>
         <div class="fitem">
             <label>备注:</label>
-            <input name="Remark" class="easyui-textbox">
+            <input name="Remark" id="pRemark" class="easyui-textbox">
         </div>
     </form>
 </div>
@@ -196,7 +201,7 @@
             pageSize:15,
             pageList:[15,30,50],
             singleSelect: true,
-            url: '/Slab/GetData'
+            url: '/api/Slab'
         });
 
         
@@ -232,7 +237,7 @@
     function addSlab() {
         $('#dlg').dialog('open').dialog('setTitle', '添加轨道板问题');
         $('#fm').form('clear');
-        url = '/Slab/Add';
+        url = '/api/Slab/Add';
     }
 
     function editSlab() {
@@ -240,33 +245,53 @@
         if (row) {
             $('#dlg').dialog('open').dialog('setTitle', '编辑轨道板问题');
             $('#fm').form('load', row);
-            url = '/Slab/edit';
+            url = '/api/Slab/edit';
 
         }
     }
 
+    function getSlab() {
+        var data = {
+            RailWay: $("#pRailWay").combobox('getValue'),
+            Id: $("#pId").val(),
+            RunType: $("#pRunType").combobox('getValue'),
+            Mileage: $("#pMileage").val(),
+            StartBoardID: $("#pStartBoardID").val(),
+            SupportRailID: $("#pSupportRailID").val(),
+            HurtItem: $("#pHurtItem").combobox('getValue'),
+            HurtPosition: $("#pHurtPosition").combobox('getValue'),
+            HurtStyle: $("#pHurtStyle").combobox('getValue'),
+            Length: $("#pLength").val(),
+            Width: $("#pWidth").val(),
+            Height: $("#pHeight").val(),
+            HurtLevel: $('#pHurtLevel').val(),
+            CheckDate: $('#pCheckDate').val(),
+            Checker: $('#pChecker').val(),
+            Movie: $('#pMovie').val(),
+            TakeMeasures: $('#pTakeMeasures').val(),
+            LogoutDate: $('#pLogoutDate').val(),
+            LogoutMan: $('#pLogoutMan').val(),
+
+            Remark: $("#pRemark").val()
+        }
+
+        return data;
+    }
+
     function saveSlab() {
-        $('#fm').form('submit', {
-            url: url,
-            dataType: 'json',
-            onSubmit: function() {
-                return $(this).form('validate');
-            },
-            success: function (data) {
-                
-                if (data == "") {
-                    $('#dlg').dialog('close'); // close the dialog
-                    $('#dgSlab').datagrid('reload'); // reload the user data
-                    $.messager.show({
-                        title: '成功',
-                        msg: '导入成功！'
-                    });
-                } else {
-                    $.messager.show({
-                        title: '错误',
-                        msg: data
-                    });
-                }
+        postData(url, getSlab(), function (result) {
+            if (result.Success) {
+                $('#dlg').dialog('close'); // close the dialog
+                $('#dgSlab').datagrid('reload'); // reload the user data
+                $.messager.show({
+                    title: '成功',
+                    msg: '保存成功！'
+                });
+            } else {
+                $.messager.show({
+                    title: '错误',
+                    msg: result.Msg
+                });
             }
         });
     }
@@ -307,21 +332,21 @@
                 return $(this).form('validate');
             },
             success: function (result) {
-                if (result.Success) {
-                    $('#filePost').dialog('close'); // close the dialog
+                if (result=="") {
+                    $('#divUpdate').dialog('close'); // close the dialog
                     $('#dgSlab').datagrid('reload'); // reload the user data
 
                 } else {
                     $.messager.show({
                         title: '错误',
-                        msg: result.Msg
+                        msg: result
                     });
                 }
             }
         });
     }
 
-    function bsuExportCsv() {
+    function bsuExportCsv2() {
         var url = "../api/Slabxls";
 
         if ($('#downloadxls').length <= 0)

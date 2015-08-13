@@ -4,11 +4,12 @@ using System.IO;
 using ServiceStack.Common.Web;
 using ServiceStack.Service;
 using ServiceStack.ServiceHost;
+using ServiceStack.ServiceInterface.ServiceModel;
 using ServiceStack.Text;
 
 namespace GasWebMap.Services.Responses
 {
-    [Serializable]
+
     public class ResponseResult
     {
         /// <summary>
@@ -16,8 +17,7 @@ namespace GasWebMap.Services.Responses
         /// </summary>
         public static ResponseResult SuccessRes = new ResponseResult
         {
-            //todo 增加授权
-
+         
             Success = true
         };
 
@@ -30,7 +30,14 @@ namespace GasWebMap.Services.Responses
         public static ResponseResult FailureRes(string msg)
         {
             return new ResponseResult {Success = false, Msg = msg};
+
+            return new ResponseResult
+            {
+                Msg =msg,
+                Success = false
+            };
         }
+
     }
 
     public class ExcelResult : IHasOptions, IStreamWriter

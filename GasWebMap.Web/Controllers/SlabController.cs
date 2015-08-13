@@ -8,14 +8,20 @@ using System.Web.Mvc;
 using GasWebMap.Core;
 using GasWebMap.Domain;
 using GasWebMap.Services.Dtos;
+using GasWebMap.Services.Host;
 using GasWebMap.Services.Responses;
 using GasWebMap.Services.Services;
 using NPOI.HSSF.UserModel;
+using NPOI.SS.Formula.Functions;
 using NPOI.SS.UserModel;
 using NPOI.XWPF.UserModel;
+using ServiceStack.CacheAccess;
+using ServiceStack.Common;
+using ServiceStack.ServiceInterface;
 
 namespace GasWebMap.Web.Controllers
 {
+       [Authorize]
     public class SlabController : Controller
     {
         //
@@ -29,10 +35,10 @@ namespace GasWebMap.Web.Controllers
         public JsonResult GetData(SlabGet request)
         {
             var rep = AppEx.Container.GetRepository<SlabProblem>();
-        
+            var s = Session;
             bool bl = request.order == "asc";
 
-            Expression<Func<SlabProblem, bool>> filter = t => t.Id != null;
+            Expression<Func<SlabProblem, bool>> filter = t => t.DepartmentID == ServiceInit.CustomSession.DepartmentID;
             if (!string.IsNullOrWhiteSpace(request.RailWay))
             {
                 filter = filter.And(t => t.RailWay == request.RailWay);
@@ -74,6 +80,8 @@ namespace GasWebMap.Web.Controllers
                 var rep = AppEx.Container.GetRepository<SlabProblem>();
                 slab.Id = Guid.NewGuid();
 
+                slab.DepartmentID = ServiceInit.CustomSession.DepartmentID;
+
                 rep.Add(slab);
                 return Content("", "text/html;charset=UTF-8");
             }
@@ -105,13 +113,12 @@ namespace GasWebMap.Web.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public JsonResult Upload(HttpPostedFileBase fileData)
+        public ActionResult Upload(HttpPostedFileBase fileData)
         {
             if (fileData != null)
             {
                 try
                 {
-
                     // 文件上传后的保存路径
                     string filePath = Server.MapPath("~/Temp/");
                     if (!Directory.Exists(filePath))
@@ -126,23 +133,22 @@ namespace GasWebMap.Web.Controllers
                     var bl=  ImportData(saveName);
                     if (bl)
                     {
-                        return Json(new {Success = true});
+                        return Content("", "text/html;charset=UTF-8");
                     }
                     else
                     {
-                        return Json(new { Success = false, Message = "导入数据错误" }, JsonRequestBehavior.AllowGet);
+                        return Content("导入失败", "text/html;charset=UTF-8");
                     }
                     
                 }
                 catch (Exception ex)
                 {
-                    return Json(new { Success = false, Message = ex.Message }, JsonRequestBehavior.AllowGet);
+                    return Content("导入失败", "text/html;charset=UTF-8");
                 }
             }
             else
             {
-
-                return Json(new { Success = false, Message = "请选择要上传的文件！" }, JsonRequestBehavior.AllowGet);
+                return Content("请选择要上传的文件", "text/html;charset=UTF-8");
             }
         }
 
@@ -154,19 +160,31 @@ namespace GasWebMap.Web.Controllers
                 var startIndex = 4;
                 HSSFWorkbook book = new HSSFWorkbook(stream);
                 var sheet = book.GetSheetAt(0);
+                var wk = sheet.GetRow(1).GetCell(2).StringCellValue;
                 var lst=new List<SlabProblem>();
-                while (startIndex<=sheet.LastRowNum)
+
+                using (var service = AppHost.ResolveService<SlabProblemService>(System.Web.HttpContext.Current))
                 {
-                    var row = sheet.GetRow(startIndex);
-                    lst.Add(Row2Slab(row));
+                     
+                    var session = (CustomUserSession)service.GetSession();
+                    while (startIndex <= sheet.LastRowNum)
+                    {
+                        var row = sheet.GetRow(startIndex);
+                        var slab = Row2Slab(row);
+                        slab.Workshop = wk;
+                        slab.DepartmentID = session.DepartmentID;
+                        lst.Add(slab);
+                        startIndex++;
+                    }
 
-
-                    startIndex++;
+                    var rep = AppEx.Container.GetRepository<SlabProblem>();
+                    rep.Add(lst);
                 }
+                return true;
 
-                SlabProblemService2 service=new SlabProblemService2();
-                var s= service.Add(lst);
-                return string.IsNullOrEmpty(s);
+                //SlabProblemService2 service=new SlabProblemService2();
+                //var s= service.Add(lst);
+                //return string.IsNullOrEmpty(s);
             }
             return false;
         }

@@ -3,6 +3,7 @@ using GasWebMap.Core;
 using GasWebMap.Core.Data;
 using GasWebMap.Domain;
 using GasWebMap.Repository.MySql;
+using GasWebMap.Services.Base;
 using GasWebMap.Services.Responses;
 using ServiceStack;
 using ServiceStack.CacheAccess;
@@ -54,6 +55,12 @@ namespace GasWebMap.Services.Host
         {
             return  appHost.HasRole(role);
         }
+
+        public static  ICustomSession CustomSession
+        {
+            get { return (ICustomSession) AppHost.Resolve<AuthService>().Session; }
+        }
+        
     }
 
     public class AppHost : AppHostBase
@@ -62,6 +69,7 @@ namespace GasWebMap.Services.Host
         public AppHost()
             : base("GasMap Web Services", typeof (AccountService).Assembly)
         {
+            
         }
 
         public override void Configure(Container container)
@@ -107,6 +115,17 @@ namespace GasWebMap.Services.Host
             var session = authService.GetSession(false);
             return session.HasRole(role);
 
+        }
+
+        public ICustomSession CustomSession
+        {
+            get
+            {
+                var authService = AppHostBase.Resolve<AuthService>();
+                return (ICustomSession)authService.Session;
+       
+
+            }
         }
 
         public void Logout()
