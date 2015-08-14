@@ -32,6 +32,17 @@ namespace GasWebMap.Services.Dtos
         public string RunType { get; set; }
 
         public string RailWay { get; set; }
+
+        public double Mileage { get; set; }
+        public double Mileage2 { get; set; }
+        public string HurtItem { get; set; }
+        public string HurtPosition { get; set; }
+        public string HurtStyle { get; set; }
+        public string HurtLevel { get; set; }
+        public DateTime CheckDate { get; set; }
+        public DateTime CheckDate2 { get; set; }
+        public DateTime LogoutDate { get; set; }
+        public DateTime LogoutDate2 { get; set; }
     }
 
     [Route("/slab/delete", "POST")]

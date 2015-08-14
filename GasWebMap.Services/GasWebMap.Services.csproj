@@ -106,7 +106,6 @@
     <Compile Include="Dtos\RolePost.cs" />
     <Compile Include="Dtos\SlabProblemDto.cs" />
     <Compile Include="Dtos\TreeNode.cs" />
-    <Compile Include="Dtos\UploadFile.cs" />
     <Compile Include="MenuDataService.cs" />
     <Compile Include="MyGSM.cs" />
     <Compile Include="Services\AccountService.cs" />

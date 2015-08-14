@@ -35,7 +35,7 @@ namespace GasWebMap.Domain
         /// 里程
         /// </summary>
         /// <value>The mileage.</value>
-        public string Mileage { get; set; }
+        public double Mileage { get; set; }
 
         /// <summary>
         /// 起点板号
@@ -48,7 +48,10 @@ namespace GasWebMap.Domain
         /// </summary>
         /// <value>The support rail identifier.</value>
         public string SupportRailID { get; set; }
-
+        /// <summary>
+        /// 设备情况
+        /// </summary>
+        public string DeviceDesc { get; set; }
         /// <summary>
         /// 伤损项目
         /// </summary>
@@ -97,7 +100,7 @@ namespace GasWebMap.Domain
         /// 检测日期
         /// </summary>
         /// <value>The check date.</value>
-        public string CheckDate { get; set; }
+        public DateTime CheckDate { get; set; }
 
         /// <summary>
         /// 检测人
@@ -121,7 +124,7 @@ namespace GasWebMap.Domain
         /// 销号日期
         /// </summary>
         /// <value>The log out date.</value>
-        public string LogoutDate { get; set; }
+        public DateTime LogoutDate { get; set; }
 
         /// <summary>
         /// 销号人

@@ -148,3 +148,20 @@ function getData(url, data, sucessFun, errorFun) {
         error: errorFun
     });
 }
+
+function DateFormatter(value, rec, index) {
+    var pa = /.*\((.*)\)/;
+    var unixtime = value.match(pa)[1].substring(0, 10);
+    return getTime(unixtime);
+}
+
+function getTime(/** timestamp=0 **/) {
+    var ts = arguments[0] || 0;
+    var t, y, m, d;
+    t = ts ? new Date(ts * 1000) : new Date();
+    y = t.getFullYear();
+    m = t.getMonth() + 1;
+    d = t.getDate();
+    // 可根据需要在这里定义时间格式  
+    return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d);
+}

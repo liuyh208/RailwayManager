@@ -198,23 +198,24 @@ namespace GasWebMap.Web.Controllers
                 item.Id = Guid.NewGuid();
                 item.RailWay = GetCellString(row.GetCell(1));
                 item.RunType = GetCellString(row.GetCell(2));
-                item.Mileage = GetCellString(row.GetCell(3));
+                item.Mileage = GetCellDouble(row.GetCell(3));
                 item.StartBoardID = GetCellString(row.GetCell(4));
                 item.SupportRailID = GetCellString(row.GetCell(5));
-                item.HurtItem = GetCellString(row.GetCell(6));
-                item.HurtPosition = GetCellString(row.GetCell(7));
-                item.HurtStyle = GetCellString(row.GetCell(8));
-                item.Length = GetCellDouble(row.GetCell(9));
-                item.Width = GetCellDouble(row.GetCell(10));
-                item.Height = GetCellDouble(row.GetCell(11));
-                item.HurtLevel = GetCellString(row.GetCell(12));
-                item.CheckDate = GetCellDate(row.GetCell(13));
-                item.Checker = GetCellString(row.GetCell(14));
-                item.Movie = GetCellString(row.GetCell(15));
-                item.TakeMeasures = GetCellString(row.GetCell(16));
-                item.LogoutDate = GetCellDate(row.GetCell(17));
-                item.LogoutMan = GetCellString(row.GetCell(18));
-                item.Remark = GetCellString(row.GetCell(19));
+                item.DeviceDesc = GetCellString(row.GetCell(6));
+                item.HurtItem = GetCellString(row.GetCell(7));
+                item.HurtPosition = GetCellString(row.GetCell(8));
+                item.HurtStyle = GetCellString(row.GetCell(9));
+                item.Length = GetCellDouble(row.GetCell(10));
+                item.Width = GetCellDouble(row.GetCell(11));
+                item.Height = GetCellDouble(row.GetCell(12));
+                item.HurtLevel = GetCellString(row.GetCell(13));
+                item.CheckDate = GetCellDate(row.GetCell(14));
+                item.Checker = GetCellString(row.GetCell(15));
+                item.Movie = GetCellString(row.GetCell(16));
+                item.TakeMeasures = GetCellString(row.GetCell(17));
+                item.LogoutDate = GetCellDate(row.GetCell(18));
+                item.LogoutMan = GetCellString(row.GetCell(19));
+                item.Remark = GetCellString(row.GetCell(20));
 
             }
             catch (Exception ex) 
@@ -265,23 +266,24 @@ namespace GasWebMap.Web.Controllers
             }
         }
 
-        private string GetCellDate(ICell cell)
+        private DateTime GetCellDate(ICell cell)
         {
+            var dt = DateTime.MinValue;
             switch (cell.CellType)
             {
                 case CellType.String:
-                    return cell.StringCellValue;
+                    var bl=DateTime.TryParse(cell.StringCellValue,out dt) ;
+           
                     break;
                 case CellType.Numeric:
-                    return cell.DateCellValue.ToString("yyyy-MM-dd HH:mm:ss");
+                    return cell.DateCellValue;
                     break;
-                case CellType.Boolean:
-                    return cell.BooleanCellValue.ToString();
+               
                 case CellType.Blank:
-                    return "";
                 default:
-                    return cell.StringCellValue;
+                    return dt;
             }
+            return dt;
         }
     }
 }
