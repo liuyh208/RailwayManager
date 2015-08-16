@@ -12,6 +12,8 @@ namespace GasWebMap.Services.Responses
 
         public Guid? DepartmentID { get; set; }
 
+        public string Department { get; set; }
+
         /// <summary>
         ///     是否管理员
         /// </summary>

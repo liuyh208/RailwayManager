@@ -23,6 +23,12 @@ namespace GasWebMap.Services.Services
     {
         public PageData<SlabProblem> Get(SlabGet request)
         {
+            var result = GetData(request);
+            return new PageData<SlabProblem>(result.Result, result.Total);
+        }
+
+        private PageResult<SlabProblem> GetData(SlabGet request)
+        {
             var rep = AppEx.Container.GetRepository<SlabProblem>();
             CustomUserSession sn = this.SessionAs<CustomUserSession>();
             bool bl = request.order == "asc";
@@ -55,7 +61,7 @@ namespace GasWebMap.Services.Services
                 filter = filter.And(t => t.HurtStyle == request.HurtStyle);
             }
 
-            if (request.Mileage!=0.0)
+            if (request.Mileage != 0.0)
             {
                 filter = filter.And(t => t.Mileage >= request.Mileage);
             }
@@ -65,7 +71,7 @@ namespace GasWebMap.Services.Services
                 filter = filter.And(t => t.Mileage < request.Mileage2);
             }
 
-            if (request.CheckDate!=DateTime.MinValue)
+            if (request.CheckDate != DateTime.MinValue)
             {
                 filter = filter.And(t => t.CheckDate >= request.CheckDate);
             }
@@ -85,9 +91,8 @@ namespace GasWebMap.Services.Services
 
             var result = rep.GetPagedEntities(filter, t => t.CheckDate, bl, request.Page, request.Rows);
 
-            return new PageData<SlabProblem>(result.Result, result.Total);
+            return result;
         }
-
         /// <summary>
         /// add
         /// </summary>
@@ -148,5 +153,70 @@ namespace GasWebMap.Services.Services
             }
         }
 
+        public object Get(SlabExport slab)
+        {
+            slab.Page = 0;
+            slab.Rows = 100000;
+            var result = GetData(slab);
+            var rep = GetRepository<Department>();
+            CustomUserSession sn = this.SessionAs<CustomUserSession>();
+          
+
+            var sbHtml = new StringBuilder();
+            sbHtml.Append("<table border='1' cellspacing='0' cellpadding='0'>");
+            sbHtml.Append("<tr>");
+            sbHtml.AppendFormat("<td align=center colspan=21 height='50' style='font-size:16.0pt;font-weight:700;'>{0}</td>", "轨道板问题库");
+            sbHtml.Append("</tr>");
+            sbHtml.Append("<tr>");
+            sbHtml.AppendFormat("<td align=center colspan=2 height='50' style='font-size:14.0pt;'>{0}</td>", "车间：");
+            sbHtml.AppendFormat("<td  colspan=2 height='50' style='font-size:14.0pt;'>{0}</td>", sn.Department);
+            sbHtml.Append("</tr>");
+            sbHtml.Append("<tr>");
+            var lstTitle = new List<string> { "序号", "线别", "行别", "对应里程", "起点板号", "承轨台", "设备情况", "伤损项目", "伤损位置", "伤损形式", "长", "宽", "高", "伤损等级", "检查日期", "检查人", "影像资料", "采取措施", "销号日期", "销号人", "备注" };
+            foreach (var item in lstTitle)
+            {
+                sbHtml.AppendFormat("<td style='font-size: 14px;text-align:center;background-color: #DCE0E2; font-weight:bold;' height='25'>{0}</td>", item);
+            }
+            sbHtml.Append("</tr>");
+
+            int i = 1;
+
+            foreach (var info in result.Result)
+            {
+                sbHtml.Append("<tr>");
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", i);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", info.RailWay);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", info.RunType);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", info.Mileage);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", info.StartBoardID);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", info.SupportRailID);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", info.DeviceDesc);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", info.HurtItem);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", info.HurtPosition);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", info.HurtStyle);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", info.Length);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", info.Width);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", info.Height);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", info.HurtLevel);
+
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", info.CheckDate != DateTime.MinValue ? info.CheckDate.ToString("yyyy-MM-dd") : "");
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", info.Checker);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", info.Movie);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", info.TakeMeasures);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", info.LogoutDate != DateTime.MinValue ? info.LogoutDate.ToString("yyyy-MM-dd") : "");
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", info.LogoutMan);
+                sbHtml.AppendFormat("<td style='font-size: 12px;height:20px;'>{0}</td>", info.Remark);
+                sbHtml.Append("</tr>");
+                i++;
+            }
+
+
+            sbHtml.Append("</table>");
+
+            //第一种:使用FileContentResult
+            byte[] fileContents = Encoding.Default.GetBytes(sbHtml.ToString());
+            var fileStream = new MemoryStream(fileContents);
+            return new ExcelResult(fileStream);
+        }
     }
 }

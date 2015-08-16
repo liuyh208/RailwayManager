@@ -52,35 +52,9 @@ namespace GasWebMap.Services.Dtos
 
 
     [Route("/slabxls", "GET")]
-    public class SlabExport
+    public class SlabExport:SlabGet
     {
 
-        public string Name { get; set; }
-
-        public string WorkShop { get; set; }
-
-        public DateTime? StartDate { get; set; }
-
-        public DateTime? EndDate { get; set; }
-
-        public void Valid()
-        {
-
-            if (!StartDate.HasValue)
-            {
-                StartDate = new DateTime(1900, 1, 1);
-            }
-            if (!EndDate.HasValue)
-            {
-                EndDate = new DateTime(2200, 1, 1);
-            }
-            StartDate = StartDate.Value.Date;
-            EndDate = EndDate.Value.Date.AddDays(1);
-            if (string.IsNullOrEmpty(Name))
-            {
-                Name = "";
-            }
-        }
     }
 
 }

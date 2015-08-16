@@ -29,7 +29,7 @@ namespace GasWebMap.Services
                var   mgroup = new MenuGroupDto();
                 mgroup.Text = "系统管理";
                 mgroup.Items.Add(new MenuDto() { Text = "用户管理", Url = "/User/Manager" });
-                mgroup.Items.Add(new MenuDto() { Text = "轨道板问题库", Url = "/Slab/index" });
+                //mgroup.Items.Add(new MenuDto() { Text = "轨道板问题库", Url = "/Slab/index" });
                 // mgroup.Items.Add(new MenuDto() { Text = "权限管理", Url = "/UserRole" });
                 lst.Add(mgroup);
             }

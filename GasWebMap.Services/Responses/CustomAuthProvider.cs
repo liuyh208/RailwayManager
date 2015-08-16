@@ -25,6 +25,16 @@ namespace GasWebMap.Services.Responses
             var session = (CustomUserSession) authService.GetSession(false);
             session.DepartmentID = curUser.DepartmentID;
 
+            var rep1 = AppEx.Container.GetRepository<Department>();
+            if (curUser.DepartmentID.HasValue)
+            {
+                var en = rep1.GetEntity(t => t.Id == curUser.DepartmentID.Value);
+                if (en != null)
+                {
+                    session.Department = en.Name;
+                }
+            }
+           
           
             IRepository<UserRole> rep2 = AppEx.Container.GetRepository<UserRole>();
             List<Guid> lst = rep2.GetEntities(t => t.UserID == curUser.Id).Select(t => t.RoleID).Distinct().ToList();
