@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Integration.Mef;
+using Autofac.Integration.Mvc;
 using GasWebMap.Core.Data;
 
 namespace GasWebMap.Core
@@ -122,13 +123,13 @@ namespace GasWebMap.Core
             Type[] types = ass.GetTypes().Where(t => t.Name.EndsWith("Repository`1")).ToArray();
             if (types.Length > 0 && types[0].Name != "IRepository`1")
             {
-                builder.RegisterGeneric(types[0]).As(typeof (IRepository<>));
+                builder.RegisterGeneric(types[0]).As(typeof(IRepository<>));
                 isload = true;
             }
             types = ass.GetTypes().Where(t => t.Name.EndsWith("Repository`2")).ToArray();
             if (types.Length > 0 && types[0].Name != "IRepository`2")
             {
-                builder.RegisterGeneric(types[0]).As(typeof (IRepository<,>));
+                builder.RegisterGeneric(types[0]).As(typeof(IRepository<,>));
 
                 isload = true;
             }

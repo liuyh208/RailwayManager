@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Data.Linq.Mapping;
 using GasWebMap.Core.Data;
 
 namespace GasWebMap.Domain
 {
+    [Table(Name = "Role")]
     public class Role : EntityBase
     {
         [Required, StringLength(50)]

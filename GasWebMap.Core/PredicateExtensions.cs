@@ -25,11 +25,11 @@ namespace System.Linq
         public static Expression<Func<T, bool>> And<T>(this Expression<Func<T, bool>> expression1,
               Expression<Func<T, bool>> expression2)
         {
-            var invokedExpression = Expression.Invoke(expression2, expression1.Parameters
-                 .Cast<Expression>());
+            //var invokedExpression = Expression.Invoke(expression2, expression1.Parameters
+            //     .Cast<Expression>());
 
             return Expression.Lambda<Func<T, bool>>(Expression.And(expression1.Body,
-                   invokedExpression), expression1.Parameters);
+                   expression2.Body), expression1.Parameters);
         }
     }
 }

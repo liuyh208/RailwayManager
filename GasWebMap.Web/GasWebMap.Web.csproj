@@ -679,7 +679,6 @@
     <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="img\Thumbs.db" />
     <Content Include="packages.config" />
     <None Include="Properties\PublishProfiles\fff.pubxml" />
     <None Include="Properties\PublishProfiles\gaswebmap.pubxml" />

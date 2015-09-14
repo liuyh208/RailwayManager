@@ -53,6 +53,7 @@ namespace GasWebMap.Services.Services
             }
             if (!string.IsNullOrWhiteSpace(request.HurtPosition))
             {
+
                 filter = filter.And(t => t.HurtPosition == request.HurtPosition);
             }
 
@@ -88,7 +89,7 @@ namespace GasWebMap.Services.Services
             {
                 filter = filter.And(t => t.LogoutDate < request.LogoutDate2);
             }
-
+            //var rrr=rep.GetEntities(filter,t=>t.CheckDate)
             var result = rep.GetPagedEntities(filter, t => t.CheckDate, bl, request.Page, request.Rows);
 
             return result;
